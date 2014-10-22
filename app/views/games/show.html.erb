@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Partnership:</strong>
+  <%= @game.partnership_id %>
+</p>
+
+<p>
+  <strong>Start:</strong>
+  <%= @game.start %>
+</p>
+
+<p>
+  <strong>End:</strong>
+  <%= @game.end %>
+</p>
+
+<%= link_to 'Edit', edit_game_path(@game) %> |
+<%= link_to 'Back', games_path %>
