@@ -2,30 +2,57 @@
 <html>
 <head>
   <title>ChessGame</title>
-  
-  <p class="navbar-text pull-right">
-	<% if user_signed_in? %>
-  Logged in as <strong><%= current_user.email %></strong>.
-  <%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %> |
-  <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
-<% else %>
-  <%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %> |
-  <%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %>
-<% end %>
-
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
-<body>
 
-<% if notice %>
-  <p class="alert alert-success"><%= notice %></p>
+
+<body>
+ <div class="uk-container uk-container-center">
+    <nav class="uk-navbar uk-margin">
+      <a href="<%= welcome_index_path %>" class="uk-navbar-brand">Chess Game</a>
+
+      <% if user_signed_in? %>
+          <ul class="uk-navbar-nav">
+            <li<%= if params[:controller] == 'partnerships'; " class=uk-active" end %>><a href="<%= partnerships_url %>">My Friends</a></li>
+            <li<%= if params[:controller] == 'games'; " class=uk-active" end %>><a href="<%= games_url %>"> My Games</a></li>
+            <li<%= if params[:controller] == 'users'; " class=uk-active" end %>><a href="<%= users_index_url %>"><i class="uk-icon-home"></i></i>Home</a></li>
+          </ul>
+      <% end %>
+
+      <div class="uk-navbar-flip">
+        <div class="uk-navbar-content">
+          <% if user_signed_in? %>
+              Logged in as <strong><%= current_user.email %></strong>
+              <%= link_to "Logout", destroy_user_session_path, method: :delete, class: 'uk-button' %>
+          <% else %>
+              <%= link_to "Sign up", new_user_registration_path, :class => 'uk-link'  %> |
+              <%= link_to "Login", new_user_session_path, :class => 'uk-link'  %>
+          <% end %>
+        </div>
+      </div>
+
+     </nav>
+
+
+<% # Display flash messages across the application %>
+<% if flash[:notice] %>
+    <div class="uk-alert" data-uk-alert>
+      <a href="" class="uk-alert-close uk-close"></a>
+      <p><%= flash[:notice] %></p>
+    </div>
 <% end %>
-<% if alert %>
-  <p class="alert alert-danger"><%= alert %></p>
+<% if flash[:alert] %>
+    <div class="uk-alert uk-alert-danger" data-uk-alert>
+      <a href="" class="uk-alert-close uk-close"></a>
+      <p><%= flash[:alert] %></p>
+    </div>
 <% end %>
-<%= yield %>
+
+ <%= yield %>
+
+</div>
 
 </body>
 </html>

@@ -40,3 +40,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin]
 
 #User authentication
 gem 'devise'
+
+#CSS framework UIKit
+gem 'uikit-sass-rails', '~> 1.2.0'

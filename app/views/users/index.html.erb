@@ -1,2 +1,56 @@
-<h1>My Account</h1>
+<h1><h1> <%= image_tag avatar_url(current_user) %>My Account</h1>
 <p>Welcome <%=current_user.username%>!</p>
+
+  <div class="uk-panel uk-panel-box">
+    <div class="uk-grid uk-grid-preserve uk-text-center" data-uk-grid-match="{target:'.uk-panel'}">
+      <div class="uk-width-large-1-5 uk-hidden-medium"><div class="uk-panel"></div></div>
+
+      <div class="uk-width-large-1-5 uk-width-medium-1-3">
+        <div class="uk-panel uk-panel-box uk-panel-box-secondary">
+          <%= link_to('Edit Account', edit_user_registration_path) %>
+        </div>
+      </div>
+
+      <div class="uk-width-large-1-5 uk-width-medium-1-3">
+        <div class="uk-panel uk-panel-box uk-panel-box-secondary">
+          <%= link_to('My friends', partnerships_path) %>
+        </div>
+      </div>
+
+
+      <div class="uk-width-large-1-5 uk-width-medium-1-3">
+        <div class="uk-panel uk-panel-box uk-panel-box-secondary">
+          <%= link_to('My current games', games_path) %>
+        </div>
+      </div>
+
+      <div class="uk-width-large-1-5 uk-hidden-medium"><div class="uk-panel"></div></div>
+    </div>
+
+
+    <div class="uk-grid uk-grid-preserve uk-text-center" data-uk-grid-match="{target:'.uk-panel'}">
+
+      <div class="uk-width-large-1-5 uk-hidden-medium"><div class="uk-panel"></div></div>
+
+      <div class="uk-width-large-1-5 uk-width-medium-1-3">
+        <div class="uk-panel uk-panel-box uk-panel-box-secondary">
+          <%= link_to('Invite a friend', '/users/index') %>
+        </div>
+      </div>
+
+      <div class="uk-width-large-1-5 uk-width-medium-1-3">
+        <div class="uk-panel uk-panel-box uk-panel-box-secondary">
+          <%= link_to('Invite a new friend', '/users/index') %>
+        </div>
+      </div>
+
+
+      <div class="uk-width-large-1-5 uk-width-medium-1-3">
+        <div class="uk-panel uk-panel-box uk-panel-box-secondary">
+          <%= link_to('Finished games', '/users/index') %>
+        </div>
+      </div>
+
+
+    </div>
+</div>
