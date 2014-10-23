@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'users/index'
+
   resources :partnerships
 
   resources :games
