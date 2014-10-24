@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
   <title>ChessGame</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
@@ -17,20 +17,31 @@
           <ul class="uk-navbar-nav">
             <li<%= if params[:controller] == 'partnerships'; " class=uk-active" end %>><a href="<%= partnerships_url %>">My Friends</a></li>
             <li<%= if params[:controller] == 'games'; " class=uk-active" end %>><a href="<%= games_url %>"> My Games</a></li>
-            <li<%= if params[:controller] == 'users'; " class=uk-active" end %>><a href="<%= users_index_url %>"><i class="uk-icon-home"></i></i>Home</a></li>
+            <li<%= if params[:controller] == 'users'; " class=uk-active" end %>><a href="<%= users_index_url %>"><i class="uk-icon-home"></i>Home</a></li>
           </ul>
       <% end %>
 
       <div class="uk-navbar-flip">
-        <div class="uk-navbar-content">
           <% if user_signed_in? %>
+            <div class="uk-navbar-content">
               Logged in as <strong><%= current_user.email %></strong>
-              <%= link_to "Logout", destroy_user_session_path, method: :delete, class: 'uk-button' %>
+            </div>
+            <div class="uk-button-dropdown" data-uk-dropdown>
+              <button class="uk-button"><i class="uk-icon-user"></i></button>
+              <div class="uk-dropdown uk-dropdown-small">
+                <ul class="uk-nav uk-nav-dropdown">
+                  <li><%= link_to "Logout", destroy_user_session_path, method: :delete, class: 'uk-link' %></li>
+                  <li><%= link_to "Manage account", edit_user_registration_path, :class => 'uk-link'  %></li>
+                </ul>
+              </div>
+            </div>
           <% else %>
+            <div class="uk-navbar-content">
               <%= link_to "Sign up", new_user_registration_path, :class => 'uk-link'  %> |
               <%= link_to "Login", new_user_session_path, :class => 'uk-link'  %>
+            </div>
           <% end %>
-        </div>
+
       </div>
 
      </nav>
