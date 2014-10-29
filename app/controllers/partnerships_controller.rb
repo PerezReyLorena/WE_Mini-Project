@@ -1,37 +1,31 @@
 class PartnershipsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_partnership, only: [:show, :edit, :update, :destroy]
 
   def index
-    @partnerships = Partnership.all
-    respond_with(@partnerships)
-  end
-
-  def show
-    respond_with(@partnership)
   end
 
   def new
     @partnership = Partnership.new
-    respond_with(@partnership)
   end
 
-  def edit
-  end
+
+  # POST /types
+  # POST /types.json
 
   def create
     @partnership = Partnership.new(partnership_params)
-    @partnership.save
-    respond_with(@partnership)
-  end
+    @partnership.user1_id = current_user.id
 
-  def update
-    @partnership.update(partnership_params)
-    respond_with(@partnership)
-  end
-
-  def destroy
-    @partnership.destroy
-    respond_with(@partnership)
+    respond_to do |format|
+      if @partnership.save
+        format.html { redirect_to users_friends_path, notice: ' A new friend was successfully added.' }
+        format.json { render :show, status: :created, location: @type }
+      else
+        format.html { render :new }
+        format.json { render json: @type.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   private

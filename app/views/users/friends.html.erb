@@ -1,0 +1,23 @@
+<h1>My friends</h1>
+<table class="uk-table uk-table-striped uk-table-hover">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @friends.each do |friend|%>
+      <tr>
+        <td><%= get_friend(friend).username%></td>
+        <td><%= link_to 'View our games', users_index_path %></td>
+        <td><%= link_to 'Invite', users_index_path, class: "uk-button uk-button-small" %></td>
+
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Invite a new friend', new_partnership_path %>

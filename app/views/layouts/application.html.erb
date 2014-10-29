@@ -15,7 +15,7 @@
 
       <% if user_signed_in? %>
           <ul class="uk-navbar-nav">
-            <li<%= if params[:controller] == 'partnerships'; " class=uk-active" end %>><a href="<%= partnerships_url %>">My Friends</a></li>
+            <li<%= if params[:controller] == 'users'; " class=uk-active" end %>><a href="<%= users_friends_url %>">My Friends</a></li>
             <li<%= if params[:controller] == 'games'; " class=uk-active" end %>><a href="<%= games_url %>"> My Games</a></li>
             <li<%= if params[:controller] == 'users'; " class=uk-active" end %>><a href="<%= users_index_url %>"><i class="uk-icon-home"></i>Home</a></li>
           </ul>

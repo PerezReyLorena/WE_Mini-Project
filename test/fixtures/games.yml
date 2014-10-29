@@ -6,6 +6,21 @@ one:
   end: 2014-10-22 15:17:53
 
 two:
-  partnership_id: 1
+  partnership_id: 2
   start: 2014-10-22 15:17:53
   end: 2014-10-22 15:17:53
+
+three:
+  partnership_id: 3
+  start: 2014-10-22 15:17:53
+  end: 2014-10-22 15:17:53
+
+four:
+  partnership_id: 3
+  start: 2014-10-22 15:17:53
+  end: 2014-10-22 15:17:53
+
+five:
+   partnership_id: 1
+   start: 2014-10-22 15:17:53
+   end: 2014-10-22 15:17:53
