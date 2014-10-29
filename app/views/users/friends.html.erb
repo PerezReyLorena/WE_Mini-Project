@@ -13,7 +13,7 @@
       <tr>
         <td><%= get_friend(friend).username%></td>
         <td><%= link_to 'View our games', users_index_path %></td>
-        <td><%= link_to 'Invite', users_index_path, class: "uk-button uk-button-small" %></td>
+        <td><%= button_to 'Invite', partnerships_path(user2_id: get_friend(friend).id), class: "uk-button uk-button-small" %></td>
 
       </tr>
   <% end %>
