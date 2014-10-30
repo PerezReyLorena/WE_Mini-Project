@@ -15,11 +15,28 @@ class PartnershipsController < ApplicationController
   def create
     @partnership = Partnership.new
     @partnership.user1_id = current_user.id
+    @partnership.confirmed = false
     @partnership.user2_id = params[:user2_id]
     friend_name = User.find(@partnership.user2_id).username
     respond_to do |format|
       if @partnership.save
         format.html { redirect_to users_friends_path, notice: " An invitation was sent to #{friend_name}!" }
+        format.json { render :show, status: :created, location: @type }
+      else
+        format.html { render :new }
+        format.json { render json: @type.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def accept
+    @partnership.confirmed = true
+
+    #create a new game on this partnership
+
+    respond_to do |format|
+      if @partnership.save
+        format.html { redirect_to users_games_path, notice: "You started a new game!" }
         format.json { render :show, status: :created, location: @type }
       else
         format.html { render :new }

@@ -21,4 +21,12 @@ class UsersController < ApplicationController
     end
   end
 
+  # GET /users/invitations
+  def invitations
+    @invitations = Partnership.where('user2_id = ? AND confirmed = ?', current_user.id, false)
+  end
+
+  def games
+
+  end
 end

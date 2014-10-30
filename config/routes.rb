@@ -3,6 +3,10 @@ Rails.application.routes.draw do
 
   get 'users/friends'
 
+  get 'users/invitations'
+
+  get 'users/games'
+
   resources :partnerships
 
   resources :games

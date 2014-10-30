@@ -1,0 +1,11 @@
+<% if @invitations.empty? %>
+
+    <h3>You do not have any pending invitations.</h3>
+
+<%else%>
+
+    <h3>You have <%= @invitations.size %> pending invitations!</h3>
+
+<% end %>
+
+<%= link_to 'Back', users_index_path %>
