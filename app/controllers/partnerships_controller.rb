@@ -30,13 +30,12 @@ class PartnershipsController < ApplicationController
   end
 
   def accept
+    @partnership = Partnership.find_by id: params[:id]
     @partnership.confirmed = true
-
-    #create a new game on this partnership
-
+    @partnership.game = Game.new
     respond_to do |format|
       if @partnership.save
-        format.html { redirect_to users_games_path, notice: "You started a new game!" }
+        format.html { redirect_to users_games_path, notice: "You joined a new game!" }
         format.json { render :show, status: :created, location: @type }
       else
         format.html { render :new }
@@ -51,6 +50,6 @@ class PartnershipsController < ApplicationController
     end
 
     def partnership_params
-      params.require(:partnership).permit(:user1_id, :user2_id, :game_id)
+      params.require(:partnership).permit(:user1_id, :user2_id, :game_id, :confirmed)
     end
 end

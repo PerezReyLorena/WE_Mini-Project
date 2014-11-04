@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   get 'users/index'
 
   get 'users/friends'
@@ -6,6 +7,8 @@ Rails.application.routes.draw do
   get 'users/invitations'
 
   get 'users/games'
+
+  post 'partnerships/accept'
 
   resources :partnerships
 
