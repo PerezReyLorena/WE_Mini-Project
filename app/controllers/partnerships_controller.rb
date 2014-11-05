@@ -44,6 +44,18 @@ class PartnershipsController < ApplicationController
     end
   end
 
+  # DELETE /partnership/1
+  def destroy
+    if @partnership.destroy
+      respond_to do |format|
+        format.html { redirect_to users_index_path, notice: 'You declined an invitation!' }
+        format.json { head :no_content }
+      end
+    else
+      redirect_to users_url, alert: 'You cannot decline an invitation!'
+    end
+  end
+
   private
     def set_partnership
       @partnership = Partnership.find(params[:id])

@@ -1,7 +1,7 @@
 class WelcomeController < ApplicationController
   def index
     if current_user.present?
-      render 'users/index'
+      render 'welcome/home'
     end
   end
 end

@@ -1,31 +1,21 @@
-<h3> <%= image_tag avatar_url(current_user) %> Welcome <%=current_user.username%>!</h3>
+<h1>Listing Users</h1>
+<table class="uk-table uk-table-striped uk-table-hover">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>&nbsp;</th>
+  </tr>
+  </thead>
 
-  <div class="uk-panel uk-panel-box">
-    <div class="uk-grid uk-grid-preserve uk-text-center" data-uk-grid-match="{target:'.uk-panel'}">
+  <tbody>
+  <% @users.each do |u|%>
+      <tr>
+        <td><%= u.username%></td>
+        <td><%= button_to 'Invite', partnerships_path(user2_id: u.id), class: "uk-button uk-button-small" %></td>
 
-      <div class="uk-width-large-1-5 uk-hidden-medium">
-        <div class="uk-panel">
-        </div>
-      </div>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
 
-
-      <div class="uk-width-large-1-5 uk-width-medium-1-3">
-        <div class="uk-panel uk-panel-box uk-panel-box-primary">
-          <%= link_to('My current games', users_games_path) %>
-        </div>
-      </div>
-
-      <div class="uk-width-large-1-5 uk-width-medium-1-3">
-      <div class="uk-panel uk-panel-box uk-panel-box-primary">
-        <%= link_to('Invite a new friend', users_index_path) %>
-      </div>
-    </div>
-      <div class="uk-width-large-1-5 uk-width-medium-1-3">
-        <div class="uk-panel uk-panel-box uk-panel-box-primary">
-          <%= link_to('My invitations', users_invitations_path) %>
-        </div>
-      </div>
-
-
-    </div>
-</div>
+<%= link_to 'Back', welcome_home_path %>

@@ -3,7 +3,6 @@ class GamesController < ApplicationController
 
   def index
     @games = Game.all
-    respond_with(@games)
   end
 
   def show

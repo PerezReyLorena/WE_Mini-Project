@@ -3,6 +3,7 @@ class UsersController < ApplicationController
 
   # GET users/index
   def index
+    @users = User.all
   end
 
   # GET /users/friends
