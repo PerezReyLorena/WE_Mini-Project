@@ -24,10 +24,12 @@ class UsersController < ApplicationController
 
   # GET /users/invitations
   def invitations
-    @invitations = Partnership.where('user2_id = ? AND confirmed = ?', current_user.id, false)
+    @received_invitations = Partnership.where('user2_id = ? AND confirmed IS NULL', current_user.id)
+    @declined_invitations = Partnership.where('user1_id = ? AND confirmed = ?', current_user.id, false)
   end
 
   def games
 
   end
+
 end

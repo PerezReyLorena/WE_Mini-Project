@@ -15,7 +15,7 @@ class PartnershipsController < ApplicationController
   def create
     @partnership = Partnership.new
     @partnership.user1_id = current_user.id
-    @partnership.confirmed = false
+    # @partnership.confirmed = false
     @partnership.user2_id = params[:user2_id]
     friend_name = User.find(@partnership.user2_id).username
     respond_to do |format|
@@ -44,15 +44,29 @@ class PartnershipsController < ApplicationController
     end
   end
 
+  def decline
+    @partnership = Partnership.find_by id: params[:id]
+    @partnership.confirmed = false
+    respond_to do |format|
+      if @partnership.save
+        format.html { redirect_to users_invitations_url, notice: "You declined an invitation!" }
+        format.json { render :show, status: :created, location: @type }
+      else
+        format.html { render :new }
+        format.json { render json: @type.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   # DELETE /partnership/1
   def destroy
     if @partnership.destroy
       respond_to do |format|
-        format.html { redirect_to users_index_path, notice: 'You declined an invitation!' }
+        format.html { redirect_to users_invitations_url, notice: 'The declined invitation was removed!' }
         format.json { head :no_content }
       end
     else
-      redirect_to users_url, alert: 'You cannot decline an invitation!'
+      redirect_to users_invitations_url, alert: 'The declined invitation could not be removed!'
     end
   end
 

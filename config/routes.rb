@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
   post 'partnerships/accept'
 
+  post 'partnerships/decline'
+
   resources :partnerships
 
   resources :games

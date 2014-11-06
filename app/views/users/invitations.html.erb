@@ -1,11 +1,22 @@
-<% if @invitations.empty? %>
-    <h3>You do not have any pending invitations.</h3>
+<h1>Invitations</h1>
+<% if @received_invitations.empty? %>
+    <h3>You don't have any pending invitations.</h3>
 <%else%>
-    <%@invitations.each do |invitation|%>
+    <%@received_invitations.each do |invitation|%>
       <%= get_friend(invitation).username%> invites you to join a game!
       <%= button_to 'Accept', controller: :partnerships, action: "accept", id: invitation.id, class: "uk-button uk-button-small" %>
-      <%= button_to 'Decline', partnership_path(id: invitation.id), method: :delete, data: { confirm: "Are you sure?" }, class: "uk-button uk-button-small" %>
+      <%= button_to 'Decline', controller: :partnerships, action: "decline", id: invitation.id, data: { confirm: "Are you sure you don't want to play?" }, class: "uk-button uk-button-small" %>
     <% end %>
 <% end %>
 
-<%= link_to 'Back', users_index_path %>
+
+<% if not @declined_invitations.empty? %>
+    <h1>Declined invitations</h1>
+    <%@declined_invitations.each do |invitation|%>
+        <%= get_friend(invitation).username%> declined your invitation
+        <%= button_to 'ok', partnership_path(id: invitation.id), method: "delete", class: "uk-button uk-button-small" %>
+    <% end %>
+<% end %>
+
+
+<%= link_to 'Back', welcome_home_path %>
