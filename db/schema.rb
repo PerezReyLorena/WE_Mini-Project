@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141030083224) do
+ActiveRecord::Schema.define(version: 20141107095503) do
+
+  create_table "board_states", force: true do |t|
+    t.integer  "game_id"
+    t.text     "state"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "move_id"
+  end
 
   create_table "games", force: true do |t|
     t.integer  "partnership_id"
@@ -19,6 +27,16 @@ ActiveRecord::Schema.define(version: 20141030083224) do
     t.datetime "end"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "winner"
+  end
+
+  create_table "moves", force: true do |t|
+    t.string   "from_to"
+    t.boolean  "valid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "game_id"
+    t.integer  "user_id"
   end
 
   create_table "partnerships", force: true do |t|
@@ -44,6 +62,8 @@ ActiveRecord::Schema.define(version: 20141030083224) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "username"
+    t.integer  "score"
+    t.string   "image"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
