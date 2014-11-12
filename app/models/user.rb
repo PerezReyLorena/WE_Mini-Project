@@ -5,6 +5,6 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
   has_many :partnerships_as_user1, :class_name => 'Partnership', foreign_key: 'user1'
   has_many :partnerships_as_user2, :class_name => 'Partnership', foreign_key: 'user2'
-  has_many :games
+  has_many :games, :class_name => 'Game', foreign_key: 'game'
   has_many :moves
 end
