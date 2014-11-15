@@ -1,0 +1,23 @@
+<h1>My Current Games</h1>
+
+<table class="uk-table uk-table-striped uk-table-hover">
+  <thead>
+  <tr>
+    <th>Start</th>
+	<th>Partner</th>
+    <th>Statistics</th>
+  </tr>
+  </thead>
+
+  <tbody>
+    <% @current_games.each do |g| %>
+      <tr>
+        <td><%= g.start%></td>
+        <td><%= partner(g).username%></td>
+		<td>TODO: Display some statistics</td>
+      </tr>
+	<% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Back', welcome_home_path %>

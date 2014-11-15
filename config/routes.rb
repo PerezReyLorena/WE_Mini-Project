@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   get 'users/invitations'
 
-  get 'users/games'
+  get 'users/current_games'
 
   post 'partnerships/accept'
 

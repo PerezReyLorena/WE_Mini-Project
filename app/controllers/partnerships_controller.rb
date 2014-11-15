@@ -15,7 +15,6 @@ class PartnershipsController < ApplicationController
   def create
     @partnership = Partnership.new
     @partnership.user1_id = current_user.id
-    # @partnership.confirmed = false
     @partnership.user2_id = params[:user2_id]
     friend_name = User.find(@partnership.user2_id).username
     respond_to do |format|
@@ -32,10 +31,10 @@ class PartnershipsController < ApplicationController
   def accept
     @partnership = Partnership.find_by id: params[:id]
     @partnership.confirmed = true
-    @partnership.game = Game.new
+    @partnership.create_game(start: Time.now)
     respond_to do |format|
       if @partnership.save
-        format.html { redirect_to users_games_path, notice: "You joined a new game!" }
+        format.html { redirect_to users_current_games_path, notice: "You joined a new game!" }
         format.json { render :show, status: :created, location: @type }
       else
         format.html { render :new }
