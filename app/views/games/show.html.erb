@@ -15,29 +15,71 @@
   <%= @game.end %>
 </p>
 <div>
-  <canvas id="chess_board" width="480" height="480">Your browser does not support canvas!</canvas>
+  <canvas id="chess_board" width="500" height="500">Your browser does not support canvas!</canvas>
 </div>
+
 <script type="text/javascript" charset="utf-8">
   var canvas = document.getElementById("chess_board");
+
+// calculate position of the canvas DOM element on the page
+
+var canvasPosition = {
+    x: canvas.offsetLeft,
+    y: canvas.offsetTop
+};
+
+canvas.onclick = function(e) {
+
+    // use pageX and pageY to get the mouse position
+    // relative to the browser window
+
+    var mouse = {
+        x: e.pageX - canvasPosition.x,
+        y: e.pageY - canvasPosition.y
+    }
+
+    // now you have local coordinates,
+    // which consider a (0,0) origin at the
+    // top-left of canvas element
+	var file = Math.floor((480-mouse.y)/60)+1;
+	var rank = Math.floor((mouse.x-20)/60)+1;
+	
+	alert('file: '+file+", rank: "+rank);
+};
+
   var context = canvas.getContext("2d");
+  /* Fill the black tiles */
   context.fillStyle = "black";
   for(var i=0; i<4; i++) {
 	for(var j=0; j<4; j++) {
-      context.fillRect(i*120, j*120, 60, 60);
+      context.fillRect(i*120+80, j*120, 60, 60);
 	}
   }
   for(var i=0; i<4; i++) {
 	for(var j=0; j<4; j++) {
-      context.fillRect(i*120+60, j*120+60, 60, 60);
+      context.fillRect(i*120+20, j*120+60, 60, 60);
 	}
   }
   /* Draw the boarder of the board */
-  context.moveTo(  0,  0);
-  context.lineTo(  0,480);
-  context.lineTo(480,480);
-  context.lineTo(480,  0);
-  context.lineTo(  0,  0);
+  context.moveTo( 20,  0);
+  context.lineTo( 20,480);
+  context.lineTo(500,480);
+  context.lineTo(500,  0);
+  context.lineTo( 20,  0);
   context.stroke();
+  
+  /* Draw the numeration of the files and the ranks */
+  for(var i=1; i<9; i++) {
+    context.fillText(i, 5, 530-i*60);
+  }
+  context.fillText('a', 40, 495);
+  context.fillText('b', 100, 495);
+  context.fillText('c', 160, 495);
+  context.fillText('d', 220, 495);
+  context.fillText('e', 280, 495);
+  context.fillText('f', 340, 495);
+  context.fillText('g', 400, 495);
+  context.fillText('h', 460, 495);
 </script>
 
 <%= link_to 'Edit', edit_game_path(@game) %> |
