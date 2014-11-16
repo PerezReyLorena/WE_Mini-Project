@@ -4,4 +4,6 @@ class WelcomeController < ApplicationController
       render 'welcome/home'
     end
   end
+  def rules
+  end
 end
