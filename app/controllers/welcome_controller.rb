@@ -4,7 +4,4 @@ class WelcomeController < ApplicationController
       render 'welcome/home'
     end
   end
-  def rules
-    skip_before_action :authorize
-  end
 end
