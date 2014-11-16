@@ -38,7 +38,8 @@
           <% else %>
             <div class="uk-navbar-content">
               <%= link_to "Sign up", new_user_registration_path, :class => 'uk-link'  %> |
-              <%= link_to "Login", new_user_session_path, :class => 'uk-link'  %>
+              <%= link_to "Login", new_user_session_path, :class => 'uk-link'  %> |
+              <%= link_to "Rules", welcome_rules_path, :class => 'uk-link' %>
             </div>
           <% end %>
 
