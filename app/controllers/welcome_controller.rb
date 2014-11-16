@@ -5,6 +5,6 @@ class WelcomeController < ApplicationController
     end
   end
   def rules
-    render 'welcome/rules'
+    skip_before_action :authorize
   end
 end
