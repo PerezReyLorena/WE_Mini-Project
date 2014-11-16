@@ -5,5 +5,6 @@ class WelcomeController < ApplicationController
     end
   end
   def rules
+    render 'welcome/rules'
   end
 end
