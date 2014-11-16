@@ -31,7 +31,9 @@ class PartnershipsController < ApplicationController
   def accept
     @partnership = Partnership.find_by id: params[:id]
     @partnership.confirmed = true
-    @partnership.create_game(start: Time.now)
+    game = @partnership.create_game(start: Time.now)
+    new_board = Board.new
+    game.board_states.create(state: new_board.state)
     respond_to do |format|
       if @partnership.save
         format.html { redirect_to users_current_games_path, notice: "You joined a new game!" }

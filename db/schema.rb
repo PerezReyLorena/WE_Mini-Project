@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141107095503) do
+ActiveRecord::Schema.define(version: 20141115214133) do
 
   create_table "board_states", force: true do |t|
     t.integer  "game_id"
@@ -22,7 +22,6 @@ ActiveRecord::Schema.define(version: 20141107095503) do
   end
 
   create_table "games", force: true do |t|
-    t.integer  "partnership_id"
     t.datetime "start"
     t.datetime "end"
     t.datetime "created_at"

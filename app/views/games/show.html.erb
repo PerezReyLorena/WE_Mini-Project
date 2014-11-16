@@ -1,19 +1,16 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Partnership:</strong>
-  <%= @game.partnership_id %>
-</p>
-
-<p>
   <strong>Start:</strong>
   <%= @game.start %>
 </p>
 
+
 <p>
-  <strong>End:</strong>
-  <%= @game.end %>
+  <strong>Partner:</strong>
+  <%= partner(@game).username %>
 </p>
+
 <div>
   <canvas id="chess_board" width="500" height="500">Your browser does not support canvas!</canvas>
 </div>
@@ -82,5 +79,6 @@ canvas.onclick = function(e) {
   context.fillText('h', 460, 495);
 </script>
 
-<%= link_to 'Edit', edit_game_path(@game) %> |
-<%= link_to 'Back', games_path %>
+TODO: Draw proposal to <%= partner(@game).username %>: <%= button_to 'Send', controller: :games, action: "show", id: @game.id, class: "uk-button uk-button-small" %><br>
+
+View chess rules <%= link_to('here', "/chess_rules.html") %>

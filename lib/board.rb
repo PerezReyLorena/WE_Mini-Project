@@ -2,14 +2,15 @@ class Board
 
   attr_accessor :state, :current_player
   
-  class Position
-	attr_accessor :file, :rank
-	
-	def initialize(f, r)
-	  @file = f
-	  @rank = r
-	end
-  end
+    class Position
+      attr_accessor :file, :rank
+
+     def initialize(f, r)
+       @file = f
+       @rank = r
+     end
+
+    end
 
   # creates a new board with the initial game configuration if no params
   # creates a board from the passed state otherwise

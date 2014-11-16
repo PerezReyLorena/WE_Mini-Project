@@ -11,6 +11,7 @@ class GamesController < ApplicationController
 
   def show
     respond_with(@game)
+    @move
   end
 
   def new
