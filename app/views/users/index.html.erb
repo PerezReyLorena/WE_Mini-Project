@@ -11,7 +11,7 @@
   <tbody>
   <% @users.each do |u|%>
       <tr>
-	    <td>Show user picture here</td>
+	    <td><%= image_tag u.image_url(:thumb) if u.image?%></td>
         <td><%= u.username%></td>
         <td><%= button_to 'Invite', partnerships_path(user2_id: u.id), class: "uk-button uk-button-small" %></td>
 

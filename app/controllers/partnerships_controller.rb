@@ -33,7 +33,8 @@ class PartnershipsController < ApplicationController
     @partnership.confirmed = true
     game = @partnership.create_game(start: Time.now)
     new_board = Board.new
-    game.board_states.create(state: new_board.state)
+    initial_state = game.board_states.create(state: new_board.state)
+    initial_state.turn = new_board.current_player
     respond_to do |format|
       if @partnership.save
         format.html { redirect_to users_current_games_path, notice: "You joined a new game!" }

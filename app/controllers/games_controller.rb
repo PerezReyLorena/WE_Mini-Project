@@ -11,11 +11,20 @@ class GamesController < ApplicationController
 
   def show
     respond_with(@game)
-    @move
+    # select the latest board state
+    board_state = BoardState.all.order("created_at").last
+    @state = board_state.state
+    @turn = board_state.turn
+    @moves = Move.where(game_id: @game.id)
   end
 
   def new
     @game = Game.new
+  end
+
+  # TODO: validate the move and create a new board state
+  def move
+
   end
 
   def edit

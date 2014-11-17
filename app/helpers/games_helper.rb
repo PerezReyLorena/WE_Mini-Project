@@ -8,4 +8,16 @@ module GamesHelper
   def status(game)
     game.end.present? ? 'Finished' : 'Active'
   end
+
+  def current_user_turn?(game, turn)
+    partnership = Partnership.where(game_id: game.id).first
+    partnership.user1_id == current_user.id ? current_user_turn = 'B' : current_user_turn = 'W'
+    return current_user_turn == turn
+  end
+
+  def display_moves(moves)
+    moves.each do |m|
+
+    end
+  end
 end

@@ -43,3 +43,8 @@ gem 'devise'
 
 #CSS framework UIKit
 gem 'uikit-sass-rails', '~> 1.2.0'
+
+
+# Image upload
+gem "mini_magick"
+gem "carrierwave"
