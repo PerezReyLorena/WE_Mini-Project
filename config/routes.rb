@@ -1,5 +1,15 @@
 Rails.application.routes.draw do
 
+  get 'draw_requests/create'
+
+  get 'draw_requests/accept'
+
+  get 'draw_requests/decline'
+
+  get 'moves/new'
+
+  get 'moves/create'
+
   get 'users/index'
 
   get 'users/friends'
@@ -12,13 +22,18 @@ Rails.application.routes.draw do
 
   post 'partnerships/decline'
 
+  get 'moves/validate'
+
   resources :partnerships
 
   resources :games
 
+  resources :moves
+
   get 'welcome/index'
 
   get 'welcome/home'
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

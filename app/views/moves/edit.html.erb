@@ -1,0 +1,13 @@
+<div>
+  The correct entry format: f1r1->f2r2
+</div>
+
+<%= form_for @move do |f| %>
+    <div class="field">
+      <%= f.label :from_to %><br>
+      <%= f.text_field :from_to %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+<% end %>

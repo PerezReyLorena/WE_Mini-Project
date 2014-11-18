@@ -48,3 +48,6 @@ gem 'uikit-sass-rails', '~> 1.2.0'
 # Image upload
 gem "mini_magick"
 gem "carrierwave"
+
+# Avoid name collisions
+gem 'safe_attributes'

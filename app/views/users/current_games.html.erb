@@ -6,6 +6,7 @@
     <th>Start</th>
 	<th>Partner</th>
     <th>Statistics</th>
+    <th>Actions</th>
   </tr>
   </thead>
 
@@ -15,6 +16,7 @@
         <td><%= g.start%></td>
         <td><%= partner(g).username%></td>
 		<td>TODO: Display some statistics</td>
+        <td><%= link_to 'view', g %></td>
       </tr>
 	<% end %>
   </tbody>

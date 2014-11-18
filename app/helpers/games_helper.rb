@@ -15,6 +15,11 @@ module GamesHelper
     return current_user_turn == turn
   end
 
+  def current_user_color(game)
+    partnership = Partnership.where(game_id: game.id).first
+    partnership.user1_id == current_user.id ? 'B' : 'W'
+  end
+
   def display_moves(moves)
     moves.each do |m|
 

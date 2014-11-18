@@ -10,9 +10,9 @@ class GamesController < ApplicationController
   end
 
   def show
-    respond_with(@game)
+    @game = Game.find(params[:id])
     # select the latest board state
-    board_state = BoardState.all.order("created_at").last
+    board_state =  BoardState.where(game_id: @game.id).order("created_at").last
     @state = board_state.state
     @turn = board_state.turn
     @moves = Move.where(game_id: @game.id)

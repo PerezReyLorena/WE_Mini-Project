@@ -14,12 +14,12 @@ class Board
 
   # creates a new board with the initial game configuration if no params
   # creates a board from the passed state otherwise
-  def initialize(params = [])
+  def initialize(params = {})
     # creates an two dimensional 8 by 8 array and sets all cells to 'EE' (not occupied)
     # @state = Array.new(8) { Array.new(8, 'EE') }
 	
 	# set the initial status of a chess game
-	@state = [['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
+	@state = params[:state] || [['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
 			  ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
 			  ['EE', 'EE', 'EE', 'EE', 'EE', 'EE', 'EE', 'EE'],
 			  ['EE', 'EE', 'EE', 'EE', 'EE', 'EE', 'EE', 'EE'],
@@ -28,7 +28,7 @@ class Board
 			  ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
 			  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR']]
 	# set current player to white ('W' = white, 'B' = black)
-	@current_player = 'W'
+	@current_player = params[:current_player] || 'W'
 
   end
 
@@ -53,7 +53,7 @@ class Board
   private
 	def valid_move?(f, t)
 	
-  	  mp = @state[f.file][f.rank] # piece to be moved
+  	mp = @state[f.file][f.rank] # piece to be moved
 	  ds = @state[t.file][t.rank] # destination of the move
 	  
 	  # if the piece on f and the piece on t have the same
