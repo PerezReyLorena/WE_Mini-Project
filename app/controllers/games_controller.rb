@@ -16,15 +16,12 @@ class GamesController < ApplicationController
     @state = board_state.state
     @turn = board_state.turn
     @moves = Move.where(game_id: @game.id)
+    @received_draw_request = DrawRequest.where('requested = ? AND game_id = ? AND received IS NULL', current_user.id, @game.id).last
+    @sent_draw_request = DrawRequest.where('requester = ? AND game_id = ? AND received IS NULL', current_user.id, @game.id).last
   end
 
   def new
     @game = Game.new
-  end
-
-  # TODO: validate the move and create a new board state
-  def move
-
   end
 
   def edit

@@ -1,11 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'draw_requests/create'
-
-  get 'draw_requests/accept'
-
-  get 'draw_requests/decline'
-
   get 'moves/new'
 
   get 'moves/create'
@@ -24,11 +18,14 @@ Rails.application.routes.draw do
 
   get 'moves/validate'
 
+  post 'draw_requests/accept'
+
+  post 'draw_requests/decline'
+
   resources :partnerships
-
   resources :games
-
   resources :moves
+  resources :draw_requests
 
   get 'welcome/index'
 
