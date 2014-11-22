@@ -1,0 +1,23 @@
+<h1>My Games Against <%= @partner.username %></h1>
+
+<table class="uk-table uk-table-striped uk-table-hover">
+  <thead>
+  <tr>
+    <th>Start</th>
+    <th>Statistics</th>
+    <th>Status</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @games_with_friend.each do |g| %>
+      <tr>
+        <td><%= g.start%></td>
+        <td>TODO: Display some statistics</td>
+        <td><%= link_to status(g), g %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Back', welcome_home_path %>

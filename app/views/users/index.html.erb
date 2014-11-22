@@ -1,9 +1,11 @@
-<h1>Listing Users</h1>
+<h1>Registered Users</h1>
 <table class="uk-table uk-table-striped uk-table-hover">
   <thead>
   <tr>
     <th>&nbsp;</th>
     <th>Name</th>
+    <th>Score</th>
+    <th>Number of Games</th>
     <th>&nbsp;</th>
   </tr>
   </thead>
@@ -11,9 +13,11 @@
   <tbody>
   <% @users.each do |u|%>
       <tr>
-	    <td><%= image_tag u.image_url(:thumb) if u.image?%></td>
-        <td><%= u.username%></td>
-        <td><%= button_to 'Invite', partnerships_path(user2_id: u.id), class: "uk-button uk-button-small" %></td>
+	    <td class="uk-width-2-10"><%= image_tag u.image_url(:thumb) if u.image?%></td>
+        <td class="uk-width-3-10"><%= u.username %></td>
+        <td class="uk-width-2-10"><%= u.score %></td>
+        <td class="uk-width-2-10"><%= u.nb_games %></td>
+        <td class="uk-width-1-10"><%= button_to 'Invite', partnerships_path(user2_id: u.id), class: "uk-button uk-button-small" %></td>
 
       </tr>
   <% end %>

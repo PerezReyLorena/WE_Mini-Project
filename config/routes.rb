@@ -12,6 +12,8 @@ Rails.application.routes.draw do
 
   get 'users/current_games'
 
+  get 'users/games_with_friend'
+
   post 'partnerships/accept'
 
   post 'partnerships/decline'
@@ -30,6 +32,8 @@ Rails.application.routes.draw do
   get 'welcome/index'
 
   get 'welcome/home'
+
+
 
 
   # The priority is based upon order of creation: first created -> highest priority.

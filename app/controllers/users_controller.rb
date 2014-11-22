@@ -35,7 +35,15 @@ class UsersController < ApplicationController
     # map them to the games
     game_ids = partnerships.map {|p| p.game_id}
     @current_games = Game.where("id IN (#{game_ids.join(', ')}) AND end IS NULL")
-    @current_game = Game.find(game_ids)
+  end
+
+
+  def games_with_friend
+    @partner = User.find(params[:user_id])
+    partnerships = Partnership.where('(user1_id = ? AND user2_id = ?) AND confirmed = ?', current_user.id, params[:user_id], true)
+    partnerships << Partnership.where('(user1_id = ? AND user2_id = ?) AND confirmed = ?', params[:user_id], current_user.id, true)
+    game_ids = partnerships.last.map {|p| p.game_id}
+    @games_with_friend = Game.find(game_ids)
   end
 
 end

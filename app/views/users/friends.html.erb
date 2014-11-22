@@ -1,4 +1,4 @@
-<h1>My friends</h1>
+<h1>My Friends</h1>
 <table class="uk-table uk-table-striped uk-table-hover">
   <thead>
   <tr>
@@ -12,7 +12,7 @@
   <% @friends.each do |friend|%>
       <tr>
         <td><%= get_friend(friend).username%></td>
-        <td><%= link_to 'View our games', users_index_path %></td>
+        <td><%= link_to 'View our games', users_games_with_friend_path(user_id: get_friend(friend).id) %></td>
         <td><%= button_to 'Invite', partnerships_path(user2_id: get_friend(friend).id), class: "uk-button uk-button-small" %></td>
 
       </tr>
