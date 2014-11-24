@@ -1,21 +1,52 @@
 <h1>Invitations</h1>
+
 <% if @received_invitations.empty? %>
     <h3>You don't have any pending invitations.</h3>
 <%else%>
-    <%@received_invitations.each do |invitation|%>
-      <%= get_friend(invitation).username%> invites you to join a game!
-      <%= button_to 'Accept', controller: :partnerships, action: "accept", id: invitation.id, class: "uk-button uk-button-small" %>
-      <%= button_to 'Decline', controller: :partnerships, action: "decline", id: invitation.id, data: { confirm: "Are you sure you don't want to play?" }, class: "uk-button uk-button-small" %>
-    <% end %>
+    <table class = "uk-table uk-table-striped uk-table-hover">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <%@received_invitations.each do |invitation|%>
+        <tr>
+          <td><%= get_friend(invitation).username%></td>
+          <td>invites you to join a game!</td>
+          <td> <%= button_to 'Accept', controller: :partnerships, action: "accept", id: invitation.id, class: "uk-button uk-button-small" %></td>
+          <td><%= button_to 'Decline', controller: :partnerships, action: "decline", id: invitation.id, data: { confirm: "Are you sure you don't want to play?" }, class: "uk-button uk-button-small" %></td>
+                </tr>
+            <% end %>
+      </tbody>
+    </table>
 <% end %>
 
 
 <% if not @declined_invitations.empty? %>
     <h1>Declined invitations</h1>
-    <%@declined_invitations.each do |invitation|%>
-        <%= get_friend(invitation).username%> declined your invitation
-        <%= button_to 'ok', partnership_path(id: invitation.id), method: "delete", class: "uk-button uk-button-small" %>
-    <% end %>
+                <table class = "uk-table uk-table-striped uk-table-hover">
+                  <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  <%@declined_invitations.each do |invitation|%>
+                  <tr>
+                    <td><%= get_friend(invitation).username%></td>
+                    <td>declined your invitation! :(</td>
+                    <td> <%= button_to 'ok', partnership_path(id: invitation.id), method: "delete", class: "uk-button uk-button-small" %></td>
+                  </tr>
+                  </tbody>
+                  <% end %>
 <% end %>
 
 
