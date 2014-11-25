@@ -1,0 +1,22 @@
+<h1>Listing all moves</h1>
+<table class="uk-table uk-table-striped uk-table-hover">
+  <thead>
+  <tr>
+    <th>Time</th>
+    <th>Description</th>
+    <th>Board</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @moves.each do |m|%>
+      <tr>
+        <td><%= m.created_at %></td>
+        <td><%= display_move(m) %></td>
+        <td><%= button_to 'View', move_path(id: m.id), method: 'get', class: "uk-button uk-button-small" %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Back', @game %>

@@ -20,11 +20,6 @@ module GamesHelper
     partnership.user1_id == current_user.id ? 'B' : 'W'
   end
 
-  def display_moves(moves)
-    moves.each do |m|
-
-    end
-  end
 
   def display_end_status(game)
     status = "The game is over!"
@@ -37,8 +32,4 @@ module GamesHelper
     status
   end
 
-  def display_move(move)
-    player = User.find(move.user_id).username
-    "#{player}: #{move.from_to}"
-  end
 end

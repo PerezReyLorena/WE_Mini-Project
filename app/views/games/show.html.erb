@@ -118,12 +118,14 @@
       <div class="uk-width-medium-1-4">
         <div class="uk-panel uk-panel-box uk-text-center">
         <div class="uk-panel">
-          <h3 class="uk-panel-title">Moves</h3>
+          <h3 class="uk-panel-title">Recent Moves</h3>
           <ul class="uk-list uk-list-line">
-            <% @all_moves.each do |m| %>
+            <% @recent_moves.each do |m| %>
             <li><%= display_move(m)%></li>
             <% end %>
+
           </ul>
+          <%= link_to "View all moves", moves_path(game_id: @game.id)%>
         </div>
         </div>
       </div>
@@ -150,7 +152,7 @@
 
       <div class="uk-panel">
         <h3 class="uk-panel-title">Rules</h3>
-        <p>View chess rules <%= link_to('here', "/chess_rules.html", :target => "_blank") %></p>
+        <p><%= link_to('View chess rules', "/chess_rules.html", :target => "_blank") %></p>
       </div>
 
     </div>

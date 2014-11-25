@@ -6,6 +6,11 @@ class MovesController < ApplicationController
     @move = Move.new
   end
 
+  def index
+    @moves = Move.where(game_id: params[:game_id])
+    @game = Game.find(params[:game_id])
+  end
+
   def create
     @move = Move.create(game_id: params[:game_id], user_id: params[:user_id])
     respond_to do |format|
@@ -15,7 +20,9 @@ class MovesController < ApplicationController
     end
   end
 
-  def edit
+  def show
+    @move = Move.find(params[:id])
+    #@board_state = BoardState.find_by_move_id(@move.id).state
   end
 
   def update
