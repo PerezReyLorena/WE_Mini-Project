@@ -18,6 +18,7 @@ class GamesController < ApplicationController
     @moves = Move.where(game_id: @game.id)
     @received_draw_request = DrawRequest.where('requested = ? AND game_id = ? AND received IS NULL', current_user.id, @game.id).last
     @sent_draw_request = DrawRequest.where('requester = ? AND game_id = ? AND received IS NULL', current_user.id, @game.id).last
+    @all_moves = @game.moves
   end
 
   def new

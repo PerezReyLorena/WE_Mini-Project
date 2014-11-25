@@ -1,120 +1,159 @@
-<p>
-  Game start:
-  <%= @game.start %>
-</p>
-
-  <% if current_user_color(@game) == 'W'%>
-      You are playing white against <%= partner(@game).username %>
-  <% else %>
-      You are playing black against <%= partner(@game).username %>
-  <% end %>
-
-  <%= image_tag partner(@game).image_url(:thumb) if partner(@game).image?%>
-</p>
+<!--%if not @state.nil?  %> State for debugging: <!--%= @state %> <!--% end %-->
 
 
-<% if not @state.nil?  %>State: <%= @state %> <% end %>
-<p>
+<div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+  <div class="uk-panel uk-panel-box uk-panel-box-primary uk-text-center">
+    <!-- Display whose turn it is  -->
 
-<% if not @sent_draw_request.nil? %>
-    You sent a draw request to  <%= partner(@game).username %>!
-      TODO: check status button
-<% else %>
+     <% if not @sent_draw_request.nil? %>
+       <div class="uk-panel">
+         <h3 class="uk-text-large">Waiting for <%= partner(@game).username %>'s response to your draw request … <%= link_to "", @game, class: "uk-icon-refresh" %></h3>
 
-<% if not @game.end.nil? %>
-      The game is over! TODO: who is the winner?
- <% else %>
-
-      <% if not @received_draw_request.nil? %>
-          <%= partner(@game).username %> proposes a draw!
-          <%= button_to 'Accept', controller: :draw_requests, action: "accept", id: @received_draw_request.id, class: "uk-button uk-button-small" %>
-          <%= button_to 'Decline', controller: :draw_requests, action: "decline", id: @received_draw_request.id, data: { confirm: "Are you sure you want to draw this game?" }, class: "uk-button uk-button-small" %>
-      <% end %>
-
-    <% if current_user_turn?(@game, @turn)%>
-
-        It's your turn! <%= button_to 'Make a move', moves_path(game_id: @game.id), action: 'create', class: "uk-button uk-button-small" %>
-        Draw request to <%= partner(@game).username %>: <%= button_to 'Send', draw_requests_path(game_id: @game.id), class: "uk-button uk-button-small" %><br>
-
+       </div>
     <% else %>
-        It's <%= partner(@game).username %>'s turn!
-    <% end %>
-
- <% end %>
-
+      <!-- There's no pending draw request-->
+      <% if not @game.end.nil? %> <!-- The game is over -->
+         <div class="uk-panel">
+            <h3 class="uk-text-large"><%= display_end_status(@game)%></h3>
+          </div>
+      <% else %> <!-- The game is not over -->
+        <% if not @received_draw_request.nil? %> <!-- There's a draw request addressed to the current user -->
+               <div class="uk-panel">
+                <h3 class="uk-text-large"><%= partner(@game).username %> proposes a draw!</h3>
+                 <%= button_to 'Accept', controller: :draw_requests, action: "accept", id: @received_draw_request.id, class: "uk-button uk-button-primary uk-button-small" %>
+                 <%= button_to 'Decline', controller: :draw_requests, action: "decline", id: @received_draw_request.id, data: { confirm: "Are you sure you want to draw this game?" }, class: "uk-button uk-button-primary uk-button-small" %>
+              </div>
+        <% elsif current_user_turn?(@game, @turn)%> <!-- There's no draw request and it's current user's turn -->
+                <div class="uk-panel">
+                  <h3 class=class="uk-text-large">It's your turn!</h3>
+                   <%= button_to 'Make a move', moves_path(game_id: @game.id, user_id: current_user), action: 'create', class: "uk-button uk-button-primary uk-button-small" %></br>
+                   <%= button_to 'Send draw request', draw_requests_path(game_id: @game.id), class: "uk-button uk-button-primary uk-button-small" %>
+                </div>
+        <% else %> <!-- it's not current user's turn -->
+             <div class="uk-panel">
+               <h3 class="uk-text-large">It's <%= partner(@game).username %>'s turn! <%= link_to "", @game, class: "uk-icon-refresh" %></h3>
+             </div>
+        <% end %>
+      <% end %>
   <% end %>
+    </div>
+  </div>
+
+  <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+
+    <div class="uk-grid" data-uk-grid-margin>
+      <div class="uk-width-medium-2-4">
+
+        <div>
+          <canvas id="chess_board" width="500" height="500">Your browser does not support canvas!</canvas>
+        </div>
+
+        <script type="text/javascript" charset="utf-8">
+            var canvas = document.getElementById("chess_board");
+
+            // calculate position of the canvas DOM element on the page
+
+            var canvasPosition = {
+                x: canvas.offsetLeft,
+                y: canvas.offsetTop
+            };
+
+            canvas.onclick = function(e) {
+
+                // use pageX and pageY to get the mouse position
+                // relative to the browser window
+
+                var mouse = {
+                    x: e.pageX - canvasPosition.x,
+                    y: e.pageY - canvasPosition.y
+                }
+
+                // now you have local coordinates,
+                // which consider a (0,0) origin at the
+                // top-left of canvas element
+                var file = Math.floor((480-mouse.y)/60)+1;
+                var rank = Math.floor((mouse.x-20)/60)+1;
+
+                alert('file: '+file+", rank: "+rank);
+            };
+
+            var context = canvas.getContext("2d");
+            /* Fill the black tiles */
+            context.fillStyle = "black";
+            for(var i=0; i<4; i++) {
+                for(var j=0; j<4; j++) {
+                    context.fillRect(i*120+80, j*120, 60, 60);
+                }
+            }
+            for(var i=0; i<4; i++) {
+                for(var j=0; j<4; j++) {
+                    context.fillRect(i*120+20, j*120+60, 60, 60);
+                }
+            }
+            /* Draw the boarder of the board */
+            context.moveTo( 20,  0);
+            context.lineTo( 20,480);
+            context.lineTo(500,480);
+            context.lineTo(500,  0);
+            context.lineTo( 20,  0);
+            context.stroke();
+
+            /* Draw the numeration of the files and the ranks */
+            for(var i=1; i<9; i++) {
+                context.fillText(i, 5, 530-i*60);
+            }
+            context.fillText('a', 40, 495);
+            context.fillText('b', 100, 495);
+            context.fillText('c', 160, 495);
+            context.fillText('d', 220, 495);
+            context.fillText('e', 280, 495);
+            context.fillText('f', 340, 495);
+            context.fillText('g', 400, 495);
+            context.fillText('h', 460, 495);
+        </script>
+
+      </div>
 
 
+      <div class="uk-width-medium-1-4">
+        <div class="uk-panel uk-panel-box uk-text-center">
+        <div class="uk-panel">
+          <h3 class="uk-panel-title">Moves</h3>
+          <ul class="uk-list uk-list-line">
+            <% @all_moves.each do |m| %>
+            <li><%= display_move(m)%></li>
+            <% end %>
+          </ul>
+        </div>
+        </div>
+      </div>
 
+    <div class="uk-width-medium-1-4">
+        <div class="uk-panel uk-panel-box uk-text-center">
+          <% if current_user_color(@game) == 'W'%>
+              <h3 class="uk-panel-title">You are playing White against</h3>
+          <% else %>
+              <h3 class="uk-panel-title">You are playing Black against</h3>
+          <% end %>
+          <% if partner(@game).image? %>
+            <%= image_tag partner(@game).image_url(), class: "uk-border-circle width= 120 height=120"%>
+          <% else %>
+              <%= image_tag avatar_url(partner(@game)), class: "uk-border-circle width= 120 height=120"%>
+           <% end %>
+        <h3><%= partner(@game).username %></h3>
+        </div>
 
+        <div class="uk-panel">
+            <h3 class="uk-panel-title">Game Start</h3>
+            <p><%= @game.start %></p>
+        </div>
 
-  <div>
-  <canvas id="chess_board" width="500" height="500">Your browser does not support canvas!</canvas>
+      <div class="uk-panel">
+        <h3 class="uk-panel-title">Rules</h3>
+        <p>View chess rules <%= link_to('here', "/chess_rules.html", :target => "_blank") %></p>
+      </div>
+
+    </div>
+
+   </div>
 </div>
-
-<script type="text/javascript" charset="utf-8">
-  var canvas = document.getElementById("chess_board");
-
-// calculate position of the canvas DOM element on the page
-
-var canvasPosition = {
-    x: canvas.offsetLeft,
-    y: canvas.offsetTop
-};
-
-canvas.onclick = function(e) {
-
-    // use pageX and pageY to get the mouse position
-    // relative to the browser window
-
-    var mouse = {
-        x: e.pageX - canvasPosition.x,
-        y: e.pageY - canvasPosition.y
-    }
-
-    // now you have local coordinates,
-    // which consider a (0,0) origin at the
-    // top-left of canvas element
-	var file = Math.floor((480-mouse.y)/60)+1;
-	var rank = Math.floor((mouse.x-20)/60)+1;
-	
-	alert('file: '+file+", rank: "+rank);
-};
-
-  var context = canvas.getContext("2d");
-  /* Fill the black tiles */
-  context.fillStyle = "black";
-  for(var i=0; i<4; i++) {
-	for(var j=0; j<4; j++) {
-      context.fillRect(i*120+80, j*120, 60, 60);
-	}
-  }
-  for(var i=0; i<4; i++) {
-	for(var j=0; j<4; j++) {
-      context.fillRect(i*120+20, j*120+60, 60, 60);
-	}
-  }
-  /* Draw the boarder of the board */
-  context.moveTo( 20,  0);
-  context.lineTo( 20,480);
-  context.lineTo(500,480);
-  context.lineTo(500,  0);
-  context.lineTo( 20,  0);
-  context.stroke();
-  
-  /* Draw the numeration of the files and the ranks */
-  for(var i=1; i<9; i++) {
-    context.fillText(i, 5, 530-i*60);
-  }
-  context.fillText('a', 40, 495);
-  context.fillText('b', 100, 495);
-  context.fillText('c', 160, 495);
-  context.fillText('d', 220, 495);
-  context.fillText('e', 280, 495);
-  context.fillText('f', 340, 495);
-  context.fillText('g', 400, 495);
-  context.fillText('h', 460, 495);
-</script>
-
-
-View chess rules <%= link_to('here', "/chess_rules.html", :target => "_blank") %>
