@@ -3,11 +3,11 @@ class Board
   attr_accessor :state, :current_player
   
     class Position
-      attr_accessor :file, :rank
+      attr_accessor :rank, :file
 
-     def initialize(f, r)
-       @file = f
+     def initialize(r, f)
        @rank = r
+	   @file = f
      end
 
     end
@@ -36,8 +36,8 @@ class Board
   # if the validity test does not pass return false, else update the state (empty from and place the figure into to, do capture) and return the updated state
   def move(from, to)
 	if valid_move? from, to
-	  @state[to.file][to.rank] = @state[from.file][from.rank]
-	  @state[from.file][from.rank] = 'EE'
+	  @state[to.rank][to.file] = @state[from.rank][from.file]
+	  @state[from.rank][from.file] = 'EE'
 	  if @current_player == 'W'
 		@current_player = 'B'
 	  else
@@ -53,8 +53,8 @@ class Board
   private
 	def valid_move?(f, t)
 	
-  	mp = @state[f.file][f.rank] # piece to be moved
-	  ds = @state[t.file][t.rank] # destination of the move
+  	  mp = @state[f.rank][f.file] # piece to be moved
+	  ds = @state[t.rank][t.file] # destination of the move
 	  
 	  # if the piece on f and the piece on t have the same
 	  # color, the move is invalid
@@ -74,16 +74,16 @@ class Board
 			factor = 1
 			oc = 'B'
 		  end
-		  if f.file+factor == t.file
-			if f.rank == t.rank and ds[0] == 'E'
+		  if f.rank+factor == t.rank
+			if f.file == t.file and ds[0] == 'E'
 			  return true
-			elsif (f.rank-1 == t.rank or f.rank+1 == t.rank) and ds[0] == oc
+			elsif (f.file-1 == t.file or f.file+1 == t.file) and ds[0] == oc
 			  return true
 			else
 			  return false
 			end
-		  elsif f.file+2*factor == t.file and f.rank == t.rank and ds[0] == 'E' and @state[f.file+factor][f.rank][0] == 'E'
-			if f.file == 1 or f.file == 6
+		  elsif f.rank+2*factor == t.rank and f.file == t.file and ds[0] == 'E' and @state[f.rank+factor][f.file][0] == 'E'
+			if f.rank == 1 or f.rank == 6
 			  return true
 			else
 			  return false
@@ -93,12 +93,12 @@ class Board
 		  end
 		  
 		when 'R'
-		  if f.file != t.file and f.rank != t.rank
+		  if f.rank != t.rank and f.file != t.file
 			return false
-		  elsif f.file == t.file
-		    return file_move f, t
-		  else	# f.rank == t.rank
-			return rank_move f, t
+		  elsif f.rank == t.rank
+		    return rank_move f, t
+		  else	# f.file == t.file
+			return file_move f, t
 		  end
 	  
 		when 'N'
@@ -128,7 +128,7 @@ class Board
 		    return file_move f, t
 		  elsif f.rank == t.rank
 			return rank_move f, t
-		  elsif (f.file - t.file).abs != (f.rank - t.rank).abs
+		  elsif (f.file - t.file).abs == (f.rank - t.rank).abs
 		    diag_move f, t
 		  end
 		when 'K'
@@ -157,7 +157,7 @@ class Board
 		start = start+1
 		stop = stop-1
 		for rank in start..stop
-		  if @state[f.file][rank][0] != 'E'
+		  if @state[rank][f.file][0] != 'E'
 		    return false
 		  end
 		end
@@ -175,7 +175,7 @@ class Board
 		start = start+1
 		stop = stop-1
 		for file in start..stop
-		  if @state[file][f.rank][0] != 'E'
+		  if @state[f.rank][file][0] != 'E'
 			return false
 		  end
 		end
@@ -187,13 +187,13 @@ class Board
 	    if f.rank < t.rank
 		  if f.file < t.file
 		    for i in 1..(df-1)
-			  if @state[f.file+i][f.rank+i][0] == @state[f.file][f.rank][0]
+			  if @state[f.rank+i][f.file+i][0] == @state[f.rank][f.file][0]
 			    return false
 			  end
 			end
 		  else
 		    for i in 1..(df-1)
-			  if @state[f.file-i][f.rank+i][0] == @state[f.file][f.rank][0]
+			  if @state[f.rank+i][f.file-i][0] == @state[f.rank][f.file][0]
 			    return false
 			  end
 			end
@@ -201,13 +201,13 @@ class Board
 		else
 		  if f.file < t.file
 		    for i in 1..(df-1)
-			  if @state[f.file+i][f.rank-i][0] == @state[f.file][f.rank][0]
+			  if @state[f.rank-i][f.file+i][0] == @state[f.rank][f.file][0]
 			    return false
 			  end
 			end
 		  else
 		    for i in 1..(df-1)
-			  if @state[f.file-i][f.rank-i][0] == @state[f.file][f.rank][0]
+			  if @state[f.rank-i][f.file-i][0] == @state[f.rank][f.file][0]
 			    return false
 			  end
 			end
