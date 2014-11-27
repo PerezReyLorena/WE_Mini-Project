@@ -7,7 +7,7 @@ class MovesController < ApplicationController
   end
 
   def create
-    @move = Move.create(game_id: params[:game_id])
+    @move = Move.create(game_id: params[:game_id], user_id: params[:user_id])
     respond_to do |format|
       if @move.save
         format.html { render :edit}

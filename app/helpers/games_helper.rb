@@ -25,4 +25,20 @@ module GamesHelper
 
     end
   end
+
+  def display_end_status(game)
+    status = "The game is over!"
+    if game.winner.present?
+      winner = User.find(game.winner)
+      winner == current_user ? status = status+" You won!" : status = status+" #{winner} won!"
+    else
+      status = status + " It's a draw!"
+    end
+    status
+  end
+
+  def display_move(move)
+    player = User.find(move.user_id).username
+    "#{player}: #{move.from_to}"
+  end
 end
