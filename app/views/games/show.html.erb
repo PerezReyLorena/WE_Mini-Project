@@ -24,7 +24,16 @@
 		<% elsif current_user_turn?(@game, @turn)%> <!-- There's no draw request and it's current user's turn -->
 		  <div class="uk-panel">
 			<h3 class=class="uk-text-large">It's your turn!</h3>
-			<%= button_to 'Make a move', moves_path(game_id: @game.id, user_id: current_user), action: 'create', class: "uk-button uk-button-primary uk-button-small" %></br>
+			<%= form_for @game.moves.last do |f| %>
+			  <div class="field">
+				<%= f.label :from_to %><br>
+				<%= f.text_field :from_to %>
+			  </div>
+			  <div class="actions">
+				<%= f.submit %>
+			  </div>
+			<% end %>
+			<!-- <%= button_to 'Make a move', moves_path(game_id: @game.id, user_id: current_user), action: 'create', class: "uk-button uk-button-primary uk-button-small" %></br> -->
 			<%= button_to 'Send draw request', draw_requests_path(game_id: @game.id), class: "uk-button uk-button-primary uk-button-small" %>
 		  </div>
 		<% else %> <!-- it's not current user's turn -->
@@ -69,18 +78,24 @@
 		  // now you have local coordinates,
 		  // which consider a (0,0) origin at the
 		  // top-left of canvas element
-		  var file = Math.floor((480-mouse.y)/60)+1;
-		  var rank = Math.floor((mouse.x-20)/60)+1;
+		  var rank = Math.floor((480-mouse.y)/60)+1;
+		  var file = Math.floor((mouse.x-20)/60)+1;
 		  //alert('rank: '+rank+", file: "+file);
 		  if(from == 'rxfx') {
 			from = 'r'+rank+'f'+file;
+			document.getElementById("move_from_to").value = from;
 		  }
 		  else {
 			to = 'r'+rank+'f'+file;
 			var moveString = from+"->"+to;
-				  
-			// document.getElementById("move_from_to").value = moveString;
-			// document.forms[0].submit();
+			
+			// get number of moves done so far
+			nm = <%= @game.moves.last.id %>;
+			formName = "edit_move_"+nm;
+			alert (formName);
+			
+			document.getElementById("move_from_to").value = moveString;
+			document.getElementById(formName).submit();
 			alert('from: '+from+' to: '+to);
 			from = 'rxfx';
 		  }
