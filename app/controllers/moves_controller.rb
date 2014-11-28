@@ -13,9 +13,10 @@ class MovesController < ApplicationController
 
   def create
     @move = Move.create(game_id: params[:game_id], user_id: params[:user_id])
+    @move.from_to = params[:from_to]
     respond_to do |format|
       if @move.save
-        format.html { render :edit}
+        format.html { redirect_to :action => :validate, id: @move.id}
       end
     end
   end
@@ -29,7 +30,6 @@ class MovesController < ApplicationController
     respond_to do |format|
       if @move.update(move_params)
        format.html { redirect_to :action => :validate, id: @move.id}
-       # format.html { redirect_to game_url(id: @move.game_id) }
       else
         format.html { render :edit }
       end
@@ -46,19 +46,18 @@ class MovesController < ApplicationController
     current_board = BoardState.where(game_id: @move.game_id).order("created_at").last
     board = Board.new state: current_board.state, current_player: current_board.turn
     #if the move is valid create a new BoardState entry and set valid to true
-
-    respond_to do |format|
       if board.move(from, to)
         @move.valid = true
+        @move.save
         game = Game.find(@move.game_id)
         next_state = game.board_states.create(state: board.state, turn: board.current_player)
         next_state.save
-        format.html { redirect_to game_url(id: @move.game_id), notice: "Your move is valid!"}
-        # format.html { redirect_to game_url(id: @move.game_id) }
+        #TODO respond with the new turn and update the current turn in js to forbid further moves
+        #TODO render partial views for the game updating the moves and the turn box
+        head :created
       else
-        format.html {redirect_to game_url(id: @move.game_id), notice: "Your move is invalid!"}
+        head :forbidden
       end
-    end
 
   end
 

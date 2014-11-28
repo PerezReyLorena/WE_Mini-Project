@@ -5,10 +5,10 @@ class MoveParser
   # and f2 and r2 denote the destination file and rank  
   def self.parse_move(move_string)
 	from, to = move_string.split("->")
-	r1 = from[1].to_i-1
-	f1 = from[3].to_i-1
-	r2 = to[1].to_i-1
-	f2 = to[3].to_i-1
+	r1 = from[1].to_i
+	f1 = from[3].to_i
+	r2 = to[1].to_i
+	f2 = to[3].to_i
 	return r1, f1, r2, f2
   end
 end

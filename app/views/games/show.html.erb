@@ -1,254 +1,94 @@
-<!--%if not @state.nil? %> State for debugging: <!--%= @state %> <!--% end %-->
+<!--%if not @state.nil?  %> State for debugging: <!--%= @state %> <!--% end %-->
+<% content_for :head do %>
+    <%= tag :meta, :name => "state", :content => @state.to_json %>
+    <%= tag :meta, :name => "turn", :content => @turn%>
+<% end %>
 
 <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
   <div class="uk-panel uk-panel-box uk-panel-box-primary uk-text-center">
-	<!-- Display whose turn it is -->
-	<% if not @sent_draw_request.nil? %>
-	  <div class="uk-panel">
-		<h3 class="uk-text-large">Waiting for <%= partner(@game).username %>'s response to your draw request … <%= link_to "", @game, class: "uk-icon-refresh" %></h3>
-	  </div>
-	<% else %>
+    <!-- Display whose turn it is  -->
 
-	  <!-- There's no pending draw request-->
-	  <% if not @game.end.nil? %> <!-- The game is over -->
-		<div class="uk-panel">
-		  <h3 class="uk-text-large"><%= display_end_status(@game)%></h3>
-		</div>
-	  <% else %> <!-- The game is not over -->
-		<% if not @received_draw_request.nil? %> <!-- There's a draw request addressed to the current user -->
-		  <div class="uk-panel">
-			<h3 class="uk-text-large"><%= partner(@game).username %> proposes a draw!</h3>
-			<%= button_to 'Accept', controller: :draw_requests, action: "accept", id: @received_draw_request.id, class: "uk-button uk-button-primary uk-button-small" %>
-			<%= button_to 'Decline', controller: :draw_requests, action: "decline", id: @received_draw_request.id, data: { confirm: "Are you sure you want to draw this game?" }, class: "uk-button uk-button-primary uk-button-small" %>
-		  </div>
-		<% elsif current_user_turn?(@game, @turn)%> <!-- There's no draw request and it's current user's turn -->
-		  <div class="uk-panel">
-			<h3 class=class="uk-text-large">It's your turn!</h3>
-			<%= form_for @game.moves.last do |f| %>
-			  <div class="field">
-				<%= f.label :from_to %><br>
-				<%= f.text_field :from_to %>
-			  </div>
-			  <div class="actions">
-				<%= f.submit %>
-			  </div>
-			<% end %>
-			<!-- <%= button_to 'Make a move', moves_path(game_id: @game.id, user_id: current_user), action: 'create', class: "uk-button uk-button-primary uk-button-small" %></br> -->
-			<%= button_to 'Send draw request', draw_requests_path(game_id: @game.id), class: "uk-button uk-button-primary uk-button-small" %>
-		  </div>
-		<% else %> <!-- it's not current user's turn -->
-		  <div class="uk-panel">
-			<h3 class="uk-text-large">It's <%= partner(@game).username %>'s turn! <%= link_to "", @game, class: "uk-icon-refresh" %></h3>
-		  </div>
-		<% end %>
-	  <% end %>
-	<% end %>
+     <% if not @sent_draw_request.nil? %>
+       <div class="uk-panel">
+         <h3 class="uk-text-large">Waiting for <%= partner(@game).username %>'s response to your draw request … <%= link_to "", @game, class: "uk-icon-refresh" %></h3>
+
+       </div>
+    <% else %>
+      <!-- There's no pending draw request-->
+      <% if not @game.end.nil? %> <!-- The game is over -->
+         <div class="uk-panel">
+            <h3 class="uk-text-large"><%= display_end_status(@game)%></h3>
+          </div>
+      <% else %> <!-- The game is not over -->
+        <% if not @received_draw_request.nil? %> <!-- There's a draw request addressed to the current user -->
+               <div class="uk-panel">
+                <h3 class="uk-text-large"><%= partner(@game).username %> proposes a draw!</h3>
+                 <%= button_to 'Accept', controller: :draw_requests, action: "accept", id: @received_draw_request.id, class: "uk-button uk-button-primary uk-button-small" %>
+                 <%= button_to 'Decline', controller: :draw_requests, action: "decline", id: @received_draw_request.id, data: { confirm: "Are you sure you want to draw this game?" }, class: "uk-button uk-button-primary uk-button-small" %>
+              </div>
+        <% elsif current_user_turn?(@game, @turn)%> <!-- There's no draw request and it's current user's turn -->
+                <div class="uk-panel">
+                  <h3 class=class="uk-text-large" id="turnMessage">It's your turn!</h3>
+                   <%= button_to 'Make a move', moves_path(game_id: @game.id, user_id: current_user), action: 'create', class: "uk-button uk-button-primary uk-button-small" %></br>
+                   <%= button_to 'Send draw request', draw_requests_path(game_id: @game.id), class: "uk-button uk-button-primary uk-button-small" %>
+                </div>
+        <% else %> <!-- it's not current user's turn -->
+             <div class="uk-panel">
+               <h3 class="uk-text-large">It's <%= partner(@game).username %>'s turn! <%= link_to "", @game, class: "uk-icon-refresh" %></h3>
+             </div>
+        <% end %>
+      <% end %>
+  <% end %>
+    </div>
   </div>
-<div>
 
-<div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
-  <div class="uk-grid" data-uk-grid-margin>
-	<div class="uk-width-medium-2-4">
-	  <div>
-		<canvas id="chess_board" width="500" height="500">Your browser does not support canvas!</canvas>
-	  </div>
-	  
-	  <script type="text/javascript" charset="utf-8">
-		var canvas = document.getElementById("chess_board");
-		
-		// calculate position of the canvas DOM element on the page
-		var canvasPosition = {
-		  x: canvas.offsetLeft,
-		  y: canvas.offsetTop
-		};
-		
-		var from = 'rxfx';
-		var to = 'rxfx';
-		/*
-		 * When the user clicks on a tile, check if variable from is already initialized.
-		 * If so, set value of to variable and submit. Else set value of from.
-		 */
-		canvas.onclick = function(e) {
-		  // use pageX and pageY to get the mouse position
-		  // relative to the browser window
-		  var mouse = {
-			x: e.pageX - canvasPosition.x,
-			y: e.pageY - canvasPosition.y
-		  }
-		  // now you have local coordinates,
-		  // which consider a (0,0) origin at the
-		  // top-left of canvas element
-		  var rank = Math.floor((480-mouse.y)/60)+1;
-		  var file = Math.floor((mouse.x-20)/60)+1;
-		  //alert('rank: '+rank+", file: "+file);
-		  if(from == 'rxfx') {
-			from = 'r'+rank+'f'+file;
-			document.getElementById("move_from_to").value = from;
-		  }
-		  else {
-			to = 'r'+rank+'f'+file;
-			var moveString = from+"->"+to;
-			
-			// get number of moves done so far
-			nm = <%= @game.moves.last.id %>;
-			formName = "edit_move_"+nm;
-			alert (formName);
-			
-			document.getElementById("move_from_to").value = moveString;
-			document.getElementById(formName).submit();
-			alert('from: '+from+' to: '+to);
-			from = 'rxfx';
-		  }
-		};
+  <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
 
-		var context = canvas.getContext("2d");
-		
-		var wp = new Image();
-		wp.src = '/assets/WP.jpg';
-		var wr = new Image();
-		wr.src = '/assets/WR.jpg';
-		var wn = new Image();
-		wn.src = '/assets/WN.jpg';
-		var wb = new Image();
-		wb.src = '/assets/WB.jpg';
-		var wq = new Image();
-		wq.src = '/assets/WQ.jpg';
-		var wk = new Image();
-		wk.src = '/assets/WK.jpg';
-			  
-		var bp = new Image();
-		bp.src = '/assets/BP.jpg';
-		var br = new Image();
-		br.src = '/assets/BR.jpg';
-		var bn = new Image();
-		bn.src = '/assets/BN.jpg';
-		var bb = new Image();
-		bb.src = '/assets/BB.jpg';
-		var bq = new Image();
-		bq.src = '/assets/BQ.jpg';
-		var bk = new Image();
-		bk.src = '/assets/BK.jpg';
-			  
-		// context.globalAlpha = 0.5;
-		wr.onload = function() {
-		  <% for i in 0..7 %>
-			<% for j in 0..7 %>
-			  var r = <%= i %>;
-			  var f = <%= j %>;
-			  if(<%= @game.board_states.last.state[7-i][j] == "WP"%>) {
-				context.drawImage(wp, 20+f*60, r*60);
-			  }
-			  else if(<%= @game.board_states.last.state[7-i][j] == "WR"%>) {
-				context.drawImage(wr, 20+f*60, r*60);
-			  }
-			  else if(<%= @game.board_states.last.state[7-i][j] == "WN"%>) {
-				context.drawImage(wn, 20+f*60, r*60);
-			  }
-			  else if(<%= @game.board_states.last.state[7-i][j] == "WB"%>) {
-				context.drawImage(wb, 20+f*60, r*60);
-			  }
-			  else if(<%= @game.board_states.last.state[7-i][j] == "WQ"%>) {
-				context.drawImage(wq, 20+f*60, r*60);
-			  }
-			  else if(<%= @game.board_states.last.state[7-i][j] == "WK"%>) {
-				context.drawImage(wk, 20+f*60, r*60);
-			  }
-			  else if(<%= @game.board_states.last.state[7-i][j] == "BP"%>) {
-				context.drawImage(bp, 20+f*60, r*60);
-			  }
-			  else if(<%= @game.board_states.last.state[7-i][j] == "BR"%>) {
-				context.drawImage(br, 20+f*60, r*60);
-			  }
-			  else if(<%= @game.board_states.last.state[7-i][j] == "BN"%>) {
-				context.drawImage(bn, 20+f*60, r*60);
-			  }
-			  else if(<%= @game.board_states.last.state[7-i][j] == "BB"%>) {
-				context.drawImage(bb, 20+f*60, r*60);
-			  }
-			  else if(<%= @game.board_states.last.state[7-i][j] == "BQ"%>) {
-				context.drawImage(bq, 20+f*60, r*60);
-			  }
-			  else if(<%= @game.board_states.last.state[7-i][j] == "BK"%>) {
-				context.drawImage(bk, 20+f*60, r*60);
-			  }
-			<% end %>
-		  <% end %>
-		}
-		
-		/* Fill the black tiles */
-		context.fillStyle = "black";
-		for(var i=0; i<4; i++) {
-		  for(var j=0; j<4; j++) {
-			context.fillRect(i*120+80, j*120, 60, 60);
-		  }
-		}
-		for(var i=0; i<4; i++) {
-		  for(var j=0; j<4; j++) {
-			context.fillRect(i*120+20, j*120+60, 60, 60);
-		  }
-		}
+    <div class="uk-grid" data-uk-grid-margin>
+      <div class="uk-width-medium-3-4">
+           <div>
+            <canvas id="chess" width="800" height="800" game_id="<%=@game.id %>" user_id="<%= current_user.id %>"></canvas>
+             <script>draw();</script>
+           </div>
+      </div>
 
-		/* Draw the boarder of the board */
-		context.moveTo( 20, 0);
-		context.lineTo( 20,480);
-		context.lineTo(500,480);
-		context.lineTo(500, 0);
-		context.lineTo( 20, 0);
-		context.stroke();
 
-		/* Draw the numeration of the files and the ranks */
-		for(var i=1; i<9; i++) {
-		  context.fillText(i, 5, 530-i*60);
-		}
-		context.fillText('a', 40, 495);
-		context.fillText('b', 100, 495);
-		context.fillText('c', 160, 495);
-		context.fillText('d', 220, 495);
-		context.fillText('e', 280, 495);
-		context.fillText('f', 340, 495);
-		context.fillText('g', 400, 495);
-		context.fillText('h', 460, 495);
-	  </script>
-	</div>
+    <div class="uk-width-medium-1-4">
+        <div class="uk-panel uk-panel-box uk-text-center">
+          <% if current_user_color(@game) == 'W'%>
+              <h3 class="uk-panel-title">You are playing White against</h3>
+          <% else %>
+              <h3 class="uk-panel-title">You are playing Black against</h3>
+          <% end %>
+          <% if partner(@game).image? %>
+            <%= image_tag partner(@game).image_url(), class: "uk-border-circle width= 120 height=120"%>
+          <% else %>
+              <%= image_tag avatar_url(partner(@game)), class: "uk-border-circle width= 120 height=120"%>
+           <% end %>
+        <h3><%= partner(@game).username %></h3>
+        </div>
 
-	<div class="uk-width-medium-1-4">
-	  <div class="uk-panel uk-panel-box uk-text-center">
-		<div class="uk-panel">
-		  <h3 class="uk-panel-title">Recent Moves</h3>
-		  <ul class="uk-list uk-list-line">
-			<% @recent_moves.each do |m| %>
-			  <li><%= display_move(m) %></li>
-			<% end %>
-		  </ul>
-		  <%= link_to "View all moves", moves_path(game_id: @game.id)%>
-		</div>
-	  </div>
-	</div>
+        <div class="uk-panel uk-text-center">
+            <h3 class="uk-panel-title">Game Start</h3>
+            <p><%= @game.start %></p>
+        </div>
+      <div class="uk-panel uk-text-center">
+        <h3 class="uk-panel-title">Recent Moves</h3>
+        <ul class="uk-list uk-list-line">
+          <% @recent_moves.each do |m| %>
+              <li><%= display_move(m)%></li>
+          <% end %>
 
-	<div class="uk-width-medium-1-4">
-	  <div class="uk-panel uk-panel-box uk-text-center">
-		<% if current_user_color(@game) == 'W'%>
-		  <h3 class="uk-panel-title">You are playing White against</h3>
-		<% else %>
-		  <h3 class="uk-panel-title">You are playing Black against</h3>
-		<% end %>
-		<% if partner(@game).image? %>
-		  <%= image_tag partner(@game).image_url(), class: "uk-border-circle width= 120 height=120"%>
-		<% else %>
-		  <%= image_tag avatar_url(partner(@game)), class: "uk-border-circle width= 120 height=120"%>
-		<% end %>
-		<h3><%= partner(@game).username %></h3>
-	  </div>
+        </ul>
+        <%= link_to "View all moves", moves_path(game_id: @game.id)%>
+      </div>
 
-	  <div class="uk-panel">
-		<h3 class="uk-panel-title">Game Start</h3>
-		<p><%= @game.start %></p>
-	  </div>
+      <div class="uk-panel uk-text-center">
+        <h3 class="uk-panel-title">Rules</h3>
+        <p><%= link_to('View chess rules', "/chess_rules.html", :target => "_blank") %></p>
+      </div>
 
-	  <div class="uk-panel">
-		<h3 class="uk-panel-title">Rules</h3>
-		<p><%= link_to('View chess rules', "/chess_rules.html", :target => "_blank") %></p>
-	  </div>
-	</div>
-  </div>
+    </div>
+
+   </div>
 </div>

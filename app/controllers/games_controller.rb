@@ -13,12 +13,12 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
     # select the latest board state
     board_state =  BoardState.where(game_id: @game.id).order("created_at").last
-    @state = board_state.state
+    @state = board_state.json_state()
     @turn = board_state.turn
     @moves = Move.where(game_id: @game.id)
     @received_draw_request = DrawRequest.where('requested = ? AND game_id = ? AND received IS NULL', current_user.id, @game.id).last
     @sent_draw_request = DrawRequest.where('requester = ? AND game_id = ? AND received IS NULL', current_user.id, @game.id).last
-    @recent_moves = @game.moves.last(10)
+    @recent_moves = @game.moves.where(valid: true).last(5)
   end
 
   def new

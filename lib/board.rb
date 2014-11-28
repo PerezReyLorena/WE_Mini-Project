@@ -6,8 +6,8 @@ class Board
       attr_accessor :rank, :file
 
      def initialize(r, f)
-       @rank = r
-	   @file = f
+      @rank = r
+	    @file = f
      end
 
     end
@@ -53,7 +53,7 @@ class Board
   private
 	def valid_move?(f, t)
 	
-  	  mp = @state[f.rank][f.file] # piece to be moved
+  	mp = @state[f.rank][f.file] # piece to be moved
 	  ds = @state[t.rank][t.file] # destination of the move
 	  
 	  # if the piece on f and the piece on t have the same
