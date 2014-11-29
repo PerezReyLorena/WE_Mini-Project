@@ -29,7 +29,7 @@ class Board
 			  ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR']]
 	# set current player to white ('W' = white, 'B' = black)
 	@current_player = params[:current_player] || 'W'
-
+	@king_pos = {'W' => Position.new(0,4), 'B' => Position.new(7,4) }
   end
 
   # check what is in 'from', if 'from' is not empty, do checks for validity of moving the given figure from 'from' to 'to' (split them into 12 cases)
@@ -76,15 +76,15 @@ class Board
 		  end
 		  if f.rank+factor == t.rank
 			if f.file == t.file and ds[0] == 'E'
-			  return true
+			  return is_check?
 			elsif (f.file-1 == t.file or f.file+1 == t.file) and ds[0] == oc
-			  return true
+			  return is_check?
 			else
 			  return false
 			end
 		  elsif f.rank+2*factor == t.rank and f.file == t.file and ds[0] == 'E' and @state[f.rank+factor][f.file][0] == 'E'
 			if f.rank == 1 or f.rank == 6
-			  return true
+			  return is_check?
 			else
 			  return false
 			end
@@ -104,13 +104,13 @@ class Board
 		when 'N'
 		  if f.rank-2 == t.rank or f.rank+2 == t.rank
 			if (f.file-1 == t.file or f.file+1 == t.file) and ds[0] != mp[0]
-			  return true
+			  return is_check?
 			else
 			  return false
 			end
 		  elsif f.rank-1 == t.rank or f.rank+1 == t.rank
 			if (f.file-2 == t.file or f.file+2 == t.file) and ds[0] != mp[0]
-			  return true
+			  return is_check?
 			else
 			  return false
 			end
@@ -136,13 +136,114 @@ class Board
 		    return false
 		  elsif mp[0] == ds[0]
 		    return false
-		  elsif is_check? t
-		    return false
 		  # CHECK FOR CASTLING HERE
 		  else
-			return true
+			return is_check?
 		  end
 		  
+	  end
+	end
+	
+	# check if the king of current_player is in check
+	def is_check?
+	  r = @king_pos[@current_player].rank
+	  f = @king_pos[@current_player].file
+	  # set color of opponent
+	  co = 'W'
+	  if @current_player == 'W'
+	    co = 'B'
+	  end
+	  
+	  # check the inferior positions in the same file as the king
+	  sr = r-1
+	  sf = f
+	  while @state[sr][sf] == 'EE' and sr>0
+		sr = sr-1
+	  end
+	  p = @state[sr][sf]
+	  if p[0] == oc and (p[1] == 'R' or p[1] == 'Q')
+		return true
+	  end
+	  
+	  # check the left-hand positions in the same rank as the king
+	  sr = r
+	  sf = f-1
+	  while @state[sr][sf] == 'EE' and sf>0
+		sf = sf-1
+	  end
+	  p = @state[sr][sf]
+	  if p[0] == oc and (p[1] == 'R' or p[1] == 'Q')
+		return true
+	  end
+	  
+	  # check the right-hand positions in the same rank as the king
+	  sr = r
+	  sf = f+1
+	  while @state[sr][sf] == 'EE' and sf<7
+		sf = sf+1
+	  end
+	  p = @state[sr][sf]
+	  if p[0] == oc and (p[1] == 'R' or p[1] == 'Q')
+		return true
+	  end
+	  
+	  # check the lower left positions on the kings first diagonal
+	  sr = r-1
+	  sf = f-1
+	  while @state[sr][sf] == 'EE' and sr>0 and sf>0
+		sr = sr-1
+		sf = sf-1
+	  end
+	  p = @state[sr][sf]
+	  if p[0] == oc and (p[1] == 'B' or p[1] == 'Q')
+		return true
+	  end
+	  
+	  # check the upper right positions on the kings first diagonal
+	  sr = r+1
+	  sf = f+1
+	  while @state[sr][sf] == 'EE' and sr<7 and sf<7
+		sr = sr+1
+		sf = sf+1
+	  end
+	  p = @state[sr][sf]
+	  if p[0] == oc and (p[1] == 'B' or p[1] == 'Q')
+		return true
+	  end
+	  
+	  # check the lower right positions on the kings second diagonal
+	  sr = r-1
+	  sf = f+1
+	  while @state[sr][sf] == 'EE' and sr>0 and sf<7
+		sr = sr-1
+		sf = sf+1
+	  end
+	  p = @state[sr][sf]
+	  if p[0] == oc and (p[1] == 'B' or p[1] == 'Q')
+		return true
+	  end
+	  
+	  # check the upper left positions on the kings second diagonal
+	  sr = r+1
+	  sf = f-1
+	  while @state[sr][sf] == 'EE' and sr<7 and sf>0
+		sr = sr+1
+		sf = sf-1
+	  end
+	  p = @state[sr][sf]
+	  if p[0] == oc and (p[1] == 'B' or p[1] == 'Q')
+		return true
+	  end
+	  
+	  # check if there is a knight that keeps the king in check
+	  if (@state[r-2][f-1] == oc+'N') or (@state[r-2][f+1] == oc+'N')
+		return true
+	  elsif (@state[r+2][f-1] == oc+'N') or (@state[r+2][f+1] == oc+'N')
+		return true
+	  elsif (@state[r-1][f-2] == oc+'N') or (@state[r+1][f-2] == oc+'N')
+		return true
+	  elsif (@state[r-1][f+2] == oc+'N') or (@state[r+1][f+2] == oc+'N')
+		return true
 	  end
 	end
 	
@@ -161,7 +262,7 @@ class Board
 		    return false
 		  end
 		end
-		return true
+		return is_check?
 	  end
 	  
 	  def rank_move(f, t)
@@ -179,7 +280,7 @@ class Board
 			return false
 		  end
 		end
-		return true
+		return is_check?
 	  end
 	  
 	  def diag_move(f, t)
@@ -214,6 +315,61 @@ class Board
 		  end
 		end
 		return true
+	  end
+	  
+	  # test if the current player can move a piece
+	  def can_move?
+		for r in 0..7
+		  for f in 0..7
+			pos = Position.new(r,f)
+		    piece = @state[i][j]
+			if piece[0] == @current_player
+			  if piece[1] == 'P'
+				oc = 'W'
+				factor = 1
+			    if @current_player == 'W'
+				  oc = 'B'
+				  factor = -1
+				end
+				for k in -1..1
+				  if valid_move(pos, Position.new(r+factor,f+k)) or valid_move(pos, Position.new(r+2*factor,f+k))
+					return true
+				  end 
+				end
+			  elsif piece[1] == 'R'
+				for k in 0..r-1
+				  if file_move(pos, Position.new(k, f))
+					return true
+				  end
+				end
+				for k in r+1..7
+				  if file_move(pos, Position.new(k, f))
+					return true
+				  end
+				end
+				for k in 0..f-1
+				  if rank_move(pos, Position.new(r, k))
+					return true
+				  end
+				end
+				for k in f+1..7
+				  if rank_move(pos, Position.new(r, k))
+					return true
+				  end
+				end
+			  elsif piece[1] == 'N'
+				# TODO check if Knight can move
+			  elsif piece[1] == 'B'
+				# TODO check if Bishop can move
+			  elsif piece[1] == 'Q'
+				# TODO check if Queen can move
+			  elsif piece[1] == 'K'
+				# TODO check if King can move
+			  end
+			end
+		  end		  
+		end
+		return false
 	  end
 
 end
