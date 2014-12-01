@@ -12,13 +12,13 @@ function set_pieceCode(pieceCode){
     var code = null;
     switch(pieceCode) {
         case "R":
-            code = 2
+            code = 1
             break;
         case "P":
             code = 0
             break;
         case "N":
-            code = 1
+            code = 2
             break;
         case "B":
             code = 3
@@ -46,8 +46,8 @@ function set_TurnCode(turnCode){
     return code;
 }
 var //P = 0,
-	//N = 1,
-	//R = 2,
+	//R = 1,
+	//N = 2,
 	//B = 3,
 	//Q = 4,
 	//K = 5,
@@ -267,7 +267,7 @@ function processMove(clickedBlock) {
 		removeSelection(selectedPiece); //the to field is already occupied
 		checkIfPieceClicked(clickedBlock);
 	} else {
-        to = "f" + clickedBlock.row + "r" + clickedBlock.col
+        to = "r" + clickedBlock.row + "f" + clickedBlock.col
         var from_to = from + "->" + to;
         $.ajax({
             url: "/moves", // the URL for the moves_path create goes in here
@@ -310,7 +310,7 @@ function draw() {
 	if (canvas.getContext) {
 		ctx = canvas.getContext('2d');
 
-		// Calculdate the precise block size
+		// Calculate the precise block size
 		BLOCK_SIZE = canvas.height / NUMBER_OF_ROWS;
 
 		// Draw the background

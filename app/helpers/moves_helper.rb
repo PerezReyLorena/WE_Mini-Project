@@ -13,10 +13,10 @@ module MovesHelper
   def convert_move_to_description(move)
     move_string = move.from_to
     from, to = move_string.split("->")
-    r1 = from[1].to_i
-    f1 = (from[3].to_i+96).chr
-    r2 = to[1].to_i
-    f2 = (to[3].to_i+96).chr
+    r1 = from[1].to_i+1
+    f1 = (from[3].to_i+97).chr
+    r2 = to[1].to_i+1
+    f2 = (to[3].to_i+97).chr
     return "#{f1}#{r1} -> #{f2}#{r2}"
   end
 
