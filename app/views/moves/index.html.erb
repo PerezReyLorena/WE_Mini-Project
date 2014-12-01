@@ -12,7 +12,7 @@
   <% @moves.each do |m|%>
       <tr>
         <td><%= m.created_at %></td>
-        <td><%= display_move(m) %></td>
+        <td><%= m.move_to_description() %></td>
         <td><%= button_to 'View', move_path(id: m.id), method: 'get', class: "uk-button uk-button-small" %></td>
       </tr>
   <% end %>

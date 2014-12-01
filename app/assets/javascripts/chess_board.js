@@ -252,7 +252,7 @@ function movePiece(clickedBlock, enemyPiece) {
 	// Draw the piece in the new position
 	drawPiece(selectedPiece, (currentTurn === BLACK_TEAM));
 
-    // We do not want to switch the turns
+    //switch the turn
 	//currentTurn = (currentTurn === WHITE_TEAM ? BLACK_TEAM : WHITE_TEAM);
 
 	selectedPiece = null;
@@ -275,9 +275,20 @@ function processMove(clickedBlock) {
             type: "POST",
             data: JSON.stringify({game_id: canvas.getAttribute("game_id"), user_id: canvas.getAttribute("user_id"), from_to: from_to}),
             contentType: "application/json",
-            datatype: "text/plain",
-            success: function (text) {
+            datatype: "application/json",
+            //return the formatted from_to string to be displayed in the recent moves table
+            success: function (json) {
+                //the move is valid, so change the position of the figure from 'from' to 'to'
                 movePiece(clickedBlock, enemyPiece);
+                //update recent moves
+                $("#recent_moves").append(json['last_move']);
+                //update the turn box
+                if (json['game_status'] !== undefined) {
+                    $("#status_header").html(json['game_status']);
+                }
+                $("#op_name").html($("#opponent_name").text()+"'s");
+                $("#draw_request").remove();
+
             },
             error: function(xhr,status,error) {
                 alert( "Your move is invalid!");

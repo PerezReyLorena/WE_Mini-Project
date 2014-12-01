@@ -1,3 +1,12 @@
-<h1>TODO: Display the board after the move</h1>
+<% content_for :head do %>
+    <%= tag :meta, :name => "state", :content => @state.to_json %>
+    <%= tag :meta, :name => "turn", :content => current_user_color(@game)%>
+<% end %>
+<h1><%=@move.move_to_description() %></h1>
 
-<!--%= @board_state.to_s() %-->
+<div>
+  <canvas id="chess" width="800" height="800"></canvas>
+  <script>draw();</script>
+</div>
+
+<%= link_to 'Back', moves_path(game_id: @game.id) %>

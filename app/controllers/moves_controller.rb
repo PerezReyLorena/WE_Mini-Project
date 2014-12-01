@@ -23,7 +23,8 @@ class MovesController < ApplicationController
 
   def show
     @move = Move.find(params[:id])
-    #@board_state = BoardState.find_by_move_id(@move.id).state
+    @game = @move.game
+    @state = BoardState.find_by_move_id(params[:id]).json_state()
   end
 
   def update
@@ -50,11 +51,14 @@ class MovesController < ApplicationController
         @move.valid = true
         @move.save
         game = Game.find(@move.game_id)
-        next_state = game.board_states.create(state: board.state, turn: board.current_player)
+        next_state = game.board_states.create(state: board.state, turn: board.current_player, move_id: @move.id)
         next_state.save
-        #TODO respond with the new turn and update the current turn in js to forbid further moves
-        #TODO render partial views for the game updating the moves and the turn box
-        head :created
+        move_response = Hash.new
+        move_response["last_move"] = "<li>#{@move.move_to_description()}</li>"
+        if not game.end.nil?
+          move_response["game_status"] = display_game_status(game)
+        end
+        render json: move_response
       else
         head :forbidden
       end
