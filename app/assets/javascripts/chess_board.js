@@ -222,7 +222,7 @@ function selectPiece(pieceAtBlock) {
 		BLOCK_SIZE - (SELECT_LINE_WIDTH * 2));
 
 	selectedPiece = pieceAtBlock;
-    from = "f" + selectedPiece.row + "r" + selectedPiece.col;
+    from = "r" + selectedPiece.row + "f" + selectedPiece.col;
 }
 
 function checkIfPieceClicked(clickedBlock) {
