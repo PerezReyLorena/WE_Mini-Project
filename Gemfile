@@ -51,3 +51,6 @@ gem "carrierwave"
 
 # Avoid name collisions
 gem 'safe_attributes'
+
+gem 'rails_12factor', '0.0.2'
+gem 'pg', '0.17.1'

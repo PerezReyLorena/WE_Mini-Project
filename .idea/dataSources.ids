@@ -6,4 +6,7 @@
   <data-source source="LOCAL" name="Rails ChessGame: test" uuid="df2e86a4-7f2b-49ad-a5e9-b934c28d0393">
     <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
   </data-source>
+  <data-source source="LOCAL" name="Rails ChessGame: production" uuid="e35b7a35-24d1-4bd2-9511-efe8a3d617ff">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
 </component>
