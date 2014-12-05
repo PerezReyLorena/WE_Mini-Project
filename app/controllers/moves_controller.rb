@@ -55,8 +55,11 @@ class MovesController < ApplicationController
         next_state.save
         move_response = Hash.new
         move_response["last_move"] = "<li>#{@move.move_to_description()}</li>"
+        # check if there are valid moves (+any other termination conditions) for the other player
+        # if no valid moves: then you set the end of the game to Time.now and add the winner if needed
+        # update the players score
         if not game.end.nil?
-          move_response["game_status"] = display_game_status(game)
+          move_response["game_status"] = display_end_status(game)
         end
         render json: move_response
       else
