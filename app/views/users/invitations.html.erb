@@ -6,9 +6,9 @@
     <table class = "uk-table uk-table-striped uk-table-hover">
       <thead>
       <tr>
-        <th>Name</th>
-        <th>&nbsp;</th>
-        <th>&nbsp;</th>
+        <th>From</th>
+        <th>Date</th>
+        <th>Actions</th>
         <th>&nbsp;</th>
       </tr>
       </thead>
@@ -17,13 +17,14 @@
       <%@received_invitations.each do |invitation|%>
         <tr>
           <td><%= get_friend(invitation).username%></td>
-          <td>invites you to join a game!</td>
-          <td> <%= button_to 'Accept', controller: :partnerships, action: "accept", id: invitation.id, class: "uk-button uk-button-small" %></td>
-          <td><%= button_to 'Decline', controller: :partnerships, action: "decline", id: invitation.id, data: { confirm: "Are you sure you don't want to play?" }, class: "uk-button uk-button-small" %></td>
+          <td><%=invitation.created_at%></td>
+          <td> <%= button_to 'Accept', controller: :partnerships, action: "accept", id: invitation.id, class: "uk-button uk-button-small" %>
+          <%= button_to 'Decline', controller: :partnerships, action: "decline", id: invitation.id, data: { confirm: "Are you sure you don't want to play?" }, class: "uk-button uk-button-small" %></td>
                 </tr>
             <% end %>
       </tbody>
     </table>
+
 <% end %>
 
 
@@ -45,8 +46,9 @@
                     <td>declined your invitation! :(</td>
                     <td> <%= button_to 'ok', partnership_path(id: invitation.id), method: "delete", class: "uk-button uk-button-small" %></td>
                   </tr>
-                  </tbody>
                   <% end %>
+                  </tbody>
+
 <% end %>
 
 
