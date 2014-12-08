@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 
   # GET users/index
   def index
-    @users = User.all
+    @users = User.where.not(id: current_user.id)
   end
 
   # GET /users/friends
@@ -34,7 +34,9 @@ class UsersController < ApplicationController
     partnerships = Partnership.where('(user1_id = ? OR user2_id = ?) AND confirmed = ?', current_user.id, current_user.id, true)
     # map them to the games
     game_ids = partnerships.map {|p| p.game_id}
-    @current_games = Game.where("id IN (#{game_ids.join(', ')}) AND 'end' IS NULL")
+    @current_games = Game.where("id IN (#{game_ids.join(', ')}) AND end IS NULL")
+    # for postgres include end into quotation marks
+    #@current_games = Game.where("id IN (#{game_ids.join(', ')}) AND 'end' IS NULL")
   end
 
 
