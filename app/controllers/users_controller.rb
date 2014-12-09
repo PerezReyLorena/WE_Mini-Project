@@ -37,8 +37,6 @@ class UsersController < ApplicationController
     else
      # map them to the games
      game_ids = partnerships.map {|p| p.game_id}
-     logger.debug "The game_ids for the current games: " + game_ids.join(",")
-     logger.debug "The partnerships: " + partnerships.map {|p| p.id}.join(",")
       #@current_games = Game.where("id IN (#{game_ids.join(', ')}) AND end IS NULL")
       # for postgres include end into quotation marks
       @current_games = Game.where("id IN (#{game_ids.join(', ')}) AND \"end\" IS NULL")
