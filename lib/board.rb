@@ -33,6 +33,13 @@ class Board
 	# set current player to white ('W' = white, 'B' = black)
 	@current_player = params[:current_player] || 'W'
 	@king_pos = {'W' => Position.new(0,4), 'B' => Position.new(7,4) }
+	for i in 0..7
+	  for j in 0..7
+		if @state[i][j][1] == 'K'
+		  @king_pos[@state[i][j][0]] = Position.new(i, j)
+		end
+	  end
+	end
   end
 
   # check what is in 'from', if 'from' is not empty, do checks for validity of moving the given figure from 'from' to 'to' (split them into 12 cases)
@@ -72,7 +79,7 @@ class Board
   end
 
   
-  private
+  # private
 	def valid_move?(f, t)
 	  if f.rank<0 or f.rank>7 or f.file<0 or f.file>7 or t.rank<0 or t.rank>7 or t.file<0 or t.file>7
 		return false
@@ -92,13 +99,15 @@ class Board
 	      return false
 		  
 		when 'P'
-		  if mp[0] == 'B'
-			factor = -1
-			oc = 'W'
-		  else
-			factor = 1
-			oc = 'B'
-		  end
+		  factor = (mp[0] == 'B' ? -1 : 1)
+		  oc = (mp[0] == 'B' ? 'W' : 'B')
+		  # if mp[0] == 'B'
+			# factor = -1
+			# oc = 'W'
+		  # else
+			# factor = 1
+			# oc = 'B'
+		  # end
 		  if f.rank+factor == t.rank
 			if f.file == t.file and ds[0] == 'E'
 			  return is_not_check? f, t
@@ -168,106 +177,134 @@ class Board
 	end
 	
 	# check if the king of current_player is in check
+	# if from and to are provided this method controls
+	# if the move from -> to would lead to a check position
 	def is_not_check?(from=nil, to=nil)
 	  r = @king_pos[@current_player].rank
 	  f = @king_pos[@current_player].file
 	  new_state = Marshal.load(Marshal.dump(@state))
-	  if to!=nil
+	  if from!=nil and to!=nil and @state[to.rank][to.file][0] != @state[from.rank][from.file][0]
 		new_state[to.rank][to.file] = @state[from.rank][from.file]
 		new_state[from.rank][from.file] = 'EE'
+		if @state[from.rank][from.file][1] == 'K'
+		  r = to.rank
+		  f = to.file
+		end
 	  end
 	  # set color of opponent
 	  oc = (@current_player == 'W' ? 'B' : 'W')
 	  
+	  # check if king is kept in check by a pawn
+	  factor = (@current_player == 'W' ? 1 : -1)
+	  if new_state[r+factor][f-1] == oc+'P' or new_state[r+factor][f+1] == oc+'P'
+		return false
+	  end
+	  
 	  # check the inferior positions in the same file as the king
 	  sr = r
 	  sf = f
-	  while sr>0 # and new_state[sr][sf] == 'EE'
-		sr = sr-1
+	  while sr>0 # and new_state[sr][sf][0] != @current_player
+	    sr = sr-1
 		p = new_state[sr][sf]
 	    if p[0] == oc and (p[1] == 'R' or p[1] == 'Q')
 		  return false
+		elsif p[0] == @current_player
+		  break
 	    end
 	  end
 	  
 	  # check the superior positions in the same file as the king
 	  sr = r
 	  sf = f
-	  while sr<7 # and new_state[sr][sf] == 'EE'
-		sr = sr+1
+	  while sr<7 # and new_state[sr][sf][0] != @current_player
+	    sr = sr+1
 		p = new_state[sr][sf]
 		if p[0] == oc and (p[1] == 'R' or p[1] == 'Q')
 		  return false
+		elsif p[0] == @current_player
+		  break
 		end
 	  end
 	  
 	  # check the left-hand positions in the same rank as the king
 	  sr = r
 	  sf = f
-	  while sf>0 # and new_state[sr][sf] == 'EE'
-		sf = sf-1
+	  while sf>0 # and new_state[sr][sf][0] != @current_player
+	    sf = sf-1
 		p = new_state[sr][sf]
 		if p[0] == oc and (p[1] == 'R' or p[1] == 'Q')
 		  return false
+		elsif p[0] == @current_player
+		  break
 		end
 	  end
 	  
 	  # check the right-hand positions in the same rank as the king
 	  sr = r
 	  sf = f
-	  while sf<7 # and new_state[sr][sf] == 'EE'
-		sf = sf+1
+	  while sf<7 # and new_state[sr][sf][0] != @current_player
+	    sf = sf+1
 		p = new_state[sr][sf]
 		if p[0] == oc and (p[1] == 'R' or p[1] == 'Q')
 		  return false
+		elsif p[0] == @current_player
+		  break
 		end
 	  end
 	  
 	  # check the lower left positions on the kings first diagonal
 	  sr = r
 	  sf = f
-	  while sr>0 and sf>0 # and new_state[sr][sf] == 'EE'
-		sr = sr-1
+	  while sr>0 and sf>0 # and new_state[sr][sf][0] != @current_player
+	    sr = sr-1
 		sf = sf-1
 		p = new_state[sr][sf]
 		if p[0] == oc and (p[1] == 'B' or p[1] == 'Q')
 		  return false
+		elsif p[0] == @current_player
+		  break
 		end
 	  end
 	  
 	  # check the upper right positions on the kings first diagonal
 	  sr = r
 	  sf = f
-	  while sr<7 and sf<7 # and new_state[sr][sf] == 'EE'
-		sr = sr+1
+	  while sr<7 and sf<7 # and new_state[sr][sf][0] != @current_player
+	    sr = sr+1
 		sf = sf+1
 		p = new_state[sr][sf]
 		if p[0] == oc and (p[1] == 'B' or p[1] == 'Q')
 		  return false
+		elsif p[0] == @current_player
+		  break
 		end
 	  end
 	  
 	  # check the lower right positions on the kings second diagonal
 	  sr = r
 	  sf = f
-	  while sr>0 and sf<7 # and new_state[sr][sf] == 'EE'
-		sr = sr-1
+	  while sr>0 and sf<7 # and new_state[sr][sf][0] != @current_player
+	    sr = sr-1
 		sf = sf+1
 		p = new_state[sr][sf]
 		if p[0] == oc and (p[1] == 'B' or p[1] == 'Q')
 		  return false
+		elsif p[0] == @current_player
+		  break
 		end
 	  end
 	  
 	  # check the upper left positions on the kings second diagonal
 	  sr = r
 	  sf = f
-	  while sr<7 and sf>0 # and new_state[sr][sf] == 'EE'
-		sr = sr+1
+	  while sr<7 and sf>0 # and new_state[sr][sf][0] != @current_player
+	    sr = sr+1
 		sf = sf-1
 		p = new_state[sr][sf]
 		if p[0] == oc and (p[1] == 'B' or p[1] == 'Q')
 		  return false
+		elsif p[0] == @current_player
+		  break
 		end
 	  end
 	  
@@ -371,17 +408,14 @@ class Board
 			if piece[0] == @current_player
 			  if piece[1] == 'P'
 				oc = (@current_player == 'B' ? 'W' : 'B')
-				factor = (@current_player == 'B' ? 1 : -1)
-				# oc = 'W'
-				# factor = 1
-			    # if @current_player == 'W'
-				  # oc = 'B'
-				  # factor = -1
-				# end
+				factor = (@current_player == 'B' ? -1 : 1)
 				for k in -1..1
-				  if valid_move?(pos, Position.new(r+factor,f+k)) or valid_move?(pos, Position.new(r+2*factor,f+k))
+				  if valid_move?(pos, Position.new(r+factor,f+k))
 					return true
 				  end 
+				end
+				if valid_move?(pos, Position.new(r+2*factor,f))
+				  return true
 				end
 			  elsif piece[1] == 'R' or piece[1] == 'B' or piece[1] == 'Q'
 				if piece[1] == 'R' or piece[1] == 'Q'
@@ -464,28 +498,20 @@ class Board
 				  end
 			  elsif piece[1] == 'K'
 				  if valid_move?(pos, Position.new(r-1,f-1))
-				    puts "King can move to "+(r-1).to_s+","+(f-1).to_s
 					return true
 				  elsif valid_move?(pos, Position.new(r-1,f))
-				    puts "King can move to "+(r-1).to_s+","+f.to_s
 					return true
 				  elsif valid_move?(pos, Position.new(r-1,f+1))
-					puts "King can move to "+(r-1).to_s+","+(f+1).to_s
 					return true
 				  elsif valid_move?(pos, Position.new(r,f-1))
-					puts "King can move to "+r.to_s+","+(f+1).to_s
 					return true
 				  elsif valid_move?(pos, Position.new(r,f+1))
-					puts "King can move to "+r.to_s+","+(f+1).to_s
 					return true
 				  elsif valid_move?(pos, Position.new(r+1,f-1))
-					puts "King can move to "+(r+1).to_s+","+(f-1).to_s
 					return true
 				  elsif valid_move?(pos, Position.new(r+1,f))
-					puts "King can move to "+(r+1).to_s+","+f.to_s
 					return true
 				  elsif valid_move?(pos, Position.new(r+1,f+1))
-					puts "King can move to "+(r+1).to_s+","+(f+1).to_s
 					return true
 				  end
 				  if castle? pos, Position.new(pos.rank, 2) or castle? pos, Position.new(pos.rank, 6)
