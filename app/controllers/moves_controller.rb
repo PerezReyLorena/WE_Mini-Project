@@ -14,11 +14,9 @@ class MovesController < ApplicationController
   def create
     @move = Move.create(game_id: params[:game_id], user_id: params[:user_id])
     @move.from_to = params[:from_to]
-    respond_to do |format|
       if @move.save
-        format.html { redirect_to :action => :validate, id: @move.id}
+        redirect_to :action => :validate, id: @move.id
       end
-    end
   end
 
   def show
