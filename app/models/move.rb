@@ -10,7 +10,7 @@ class Move < ActiveRecord::Base
     f1 = (from[3].to_i+97).chr
     r2 = to[1].to_i
     f2 = (to[3].to_i+97).chr
-    description = "#{f1}#{r1} -> #{f2}#{r2}"
+    description = "#{f1}#{r1} → #{f2}#{r2}"
     player = User.find(self.user_id).username
     return "#{player}: #{description}"
   end

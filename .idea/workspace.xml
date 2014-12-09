@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="df7d66b7-a023-4a3c-acf6-f718f7178a9b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/moves_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/moves_controller.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/move.rb" afterPath="$PROJECT_DIR$/app/models/move.rb" />
     </list>
     <ignored path="ChessGame.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -55,10 +55,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="moves_controller.rb" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="moves_controller.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/controllers/moves_controller.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.22697368" vertical-offset="63" max-vertical-offset="1260">
+            <state vertical-scroll-proportion="0.0" vertical-offset="63" max-vertical-offset="1260">
               <caret line="18" column="9" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="9" />
               <folding />
             </state>
@@ -85,11 +85,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="move.rb" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="move.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/models/move.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="360">
-              <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
+            <state vertical-scroll-proportion="0.19736843" vertical-offset="0" max-vertical-offset="912">
+              <caret line="12" column="39" selection-start-line="12" selection-start-column="39" selection-end-line="12" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -175,7 +175,6 @@
         <option value="$PROJECT_DIR$/app/views/moves/index.html.erb" />
         <option value="$PROJECT_DIR$/app/views/games/show.html.erb" />
         <option value="$PROJECT_DIR$/app/assets/javascripts/chess_board.js" />
-        <option value="$PROJECT_DIR$/app/models/move.rb" />
         <option value="$PROJECT_DIR$/app/views/moves/show.html.erb" />
         <option value="$PROJECT_DIR$/app/helpers/moves_helper.rb" />
         <option value="$PROJECT_DIR$/config/database.yml" />
@@ -189,6 +188,7 @@
         <option value="$PROJECT_DIR$/config/environments/production.rb" />
         <option value="$PROJECT_DIR$/app/controllers/users_controller.rb" />
         <option value="$PROJECT_DIR$/app/controllers/moves_controller.rb" />
+        <option value="$PROJECT_DIR$/app/models/move.rb" />
       </list>
     </option>
   </component>
@@ -1071,14 +1071,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/move.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="360">
-          <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/db/schema.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="61" max-vertical-offset="1305">
@@ -1089,8 +1081,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/moves_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.22697368" vertical-offset="63" max-vertical-offset="1260">
+        <state vertical-scroll-proportion="0.0" vertical-offset="63" max-vertical-offset="1260">
           <caret line="18" column="9" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/move.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.19736843" vertical-offset="0" max-vertical-offset="912">
+          <caret line="12" column="39" selection-start-line="12" selection-start-column="39" selection-end-line="12" selection-end-column="39" />
           <folding />
         </state>
       </provider>
