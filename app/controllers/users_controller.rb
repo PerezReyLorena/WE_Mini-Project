@@ -32,13 +32,17 @@ class UsersController < ApplicationController
   def current_games
     # get all partnerships of the current user
     partnerships = Partnership.where('(user1_id = ? OR user2_id = ?) AND confirmed = ?', current_user.id, current_user.id, true)
-    # map them to the games
-    game_ids = partnerships.map {|p| p.game_id}
-    logger.debug "The game_ids for the current games: " + game_ids.join(",")
-    logger.debug "The partnerships: " + partnerships.map {|p| p.id}.join(",")
-    #@current_games = Game.where("id IN (#{game_ids.join(', ')}) AND end IS NULL")
-    # for postgres include end into quotation marks
-   @current_games = Game.where("id IN (#{game_ids.join(', ')}) AND \"end\" IS NULL")
+    if partnerships.empty?
+      @current_games = []
+    else
+     # map them to the games
+     game_ids = partnerships.map {|p| p.game_id}
+     logger.debug "The game_ids for the current games: " + game_ids.join(",")
+     logger.debug "The partnerships: " + partnerships.map {|p| p.id}.join(",")
+      #@current_games = Game.where("id IN (#{game_ids.join(', ')}) AND end IS NULL")
+      # for postgres include end into quotation marks
+      @current_games = Game.where("id IN (#{game_ids.join(', ')}) AND \"end\" IS NULL")
+    end
   end
 
 
