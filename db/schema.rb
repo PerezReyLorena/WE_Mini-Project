@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141118222414) do
+ActiveRecord::Schema.define(version: 20141210220942) do
 
   create_table "board_states", force: true do |t|
     t.integer  "game_id"
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 20141118222414) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "username"
-    t.integer  "score"
+    t.float    "score"
     t.string   "image"
   end
 

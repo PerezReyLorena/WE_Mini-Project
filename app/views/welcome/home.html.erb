@@ -5,6 +5,7 @@
       <div class="uk-vertical-align-middle uk-width-1-2">
         <h1 class="uk-heading-large">Welcome <%=current_user.username%>!</h1>
         <%= image_tag(current_user.image_url,  class: "uk-border-circle") if current_user.image?%>
+        <h2 class="uk-heading-medium">Your score is <%=current_user.score %></h2>
       </div>
     </div>
 

@@ -4,6 +4,7 @@
   <thead>
   <tr>
     <th>Start</th>
+    <th>Next Turn</th>
     <th>Status</th>
   </tr>
   </thead>
@@ -12,6 +13,7 @@
   <% @games_with_friend.each do |g| %>
       <tr>
         <td><%= g.start%></td>
+        <td><%= (g.board_states.last.turn == "B" ? User.find(g.partnership.user1_id).username : User.find(g.partnership.user2_id).username) if g.end.nil? %></td>
         <td><%= link_to status(g), g %></td>
       </tr>
   <% end %>

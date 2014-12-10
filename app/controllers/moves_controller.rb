@@ -14,9 +14,9 @@ class MovesController < ApplicationController
   def create
     @move = Move.create(game_id: params[:game_id], user_id: params[:user_id])
     @move.from_to = params[:from_to]
-      if @move.save
-        redirect_to :action => :validate, id: @move.id
-      end
+    if @move.save
+      redirect_to :action => :validate, id: @move.id
+    end
   end
 
   def show
@@ -28,7 +28,7 @@ class MovesController < ApplicationController
   def update
     respond_to do |format|
       if @move.update(move_params)
-       format.html { redirect_to :action => :validate, id: @move.id}
+        format.html { redirect_to :action => :validate, id: @move.id}
       else
         format.html { render :edit }
       end
@@ -44,36 +44,53 @@ class MovesController < ApplicationController
     #get the latest board state and use it to initialize a Board object
     current_board = BoardState.where(game_id: @move.game_id).order("created_at").last
     board = Board.new state: current_board.state, current_player: current_board.turn
+    logger.debug "About to do a move…"
     #if the move is valid create a new BoardState entry and set valid to true
-      if board.move(from, to)
-        @move.valid = true
-        @move.save
-        game = Game.find(@move.game_id)
-        next_state = game.board_states.create(state: board.state, turn: board.current_player, move_id: @move.id)
-        next_state.save
-        move_response = Hash.new
-        move_response["last_move"] = "<li>#{@move.move_to_description()}</li>"
-        # check if there are valid moves (+any other termination conditions) for the other player
-        # if no valid moves: then you set the end of the game to Time.now and add the winner if needed
-        # update the players score
-		finished = game_end?(board)
-		if finished == "DRAW"
-		  game.end = Time.now
-		elsif finished =~ /.+ WON/
-		  info = finished.split
-		  winner = info[0]
-		  partnership = Partnership.where(game_id: game.id).first
-		  winner = (winner == "BLACK" ? partnership.user1_id : partnership.user2_id)
-		  game.winner = winner
-		  game.end = Time.now
-		end
-        if not game.end.nil?
-          move_response["game_status"] = display_end_status(game)
+    logger.debug "The move is valid:"
+    bla = board.move(from, to)
+    if bla
+      logger.debug "The move is valid:" + bla.to_s
+      @move.valid = true
+      @move.save
+      game = Game.find(@move.game_id)
+      next_state = game.board_states.create(state: board.state, turn: board.current_player, move_id: @move.id)
+      next_state.save
+      move_response = Hash.new
+      move_response["last_move"] = "<li>#{@move.move_to_description()}</li>"
+      logger.debug move_response["last_move"]
+      # check if there are valid moves (+any other termination conditions) for the other player
+      # if no valid moves: then you set the end of the game to Time.now and add the winner if needed
+      # update the players score
+      logger.debug "About to check for the termination..."
+      finished = board.game_end?
+      logger.debug "Game status from game_end() " + finished
+      if not finished == "CONTINUE"
+        game.end = Time.now
+        partnership = Partnership.find_by_game_id(game.id)
+        if not finished == 'DRAW'
+          winner = (finished == 'B' ? partnership.user1_id : partnership.user2_id)
+          game.winner = winner
+          user = User.find(winner)
+          user.score += 1
+          user.save
+        else
+          player1 = User.find(partnership.user1_id)
+          player1.score += 0.5
+          player1.save
+          player2 = User.find(partnership.user2_id)
+          player2.score += 0.5
+          player2.save
         end
-        render json: move_response
-      else
-        head :forbidden
+        game.save
       end
+      if not game.end.nil?
+        logger.debug "About to set game_status: " + game.display_end_status(current_user)
+        move_response["game_status"] = game.display_end_status(current_user)
+      end
+      render json: move_response
+    else
+      head :forbidden
+    end
 
   end
 
@@ -85,29 +102,6 @@ class MovesController < ApplicationController
   def move_params
     params.require(:move).permit(:user_id, :game_id, :valid, :from_to)
   end
-  
-  def game_end?(board)
-	if board.can_move? == false
-	  if board.is_not_check?
-		return "DRAW"
-	  else
-	    player = (board.current_player == 'B' ? "WHITE" : "BLACK")
-		return player+" WON"
-	  end
-	else
-	  return "CONTINUE"
-	end
-  end
-  
-  def display_end_status(game)
-    status = "The game is over!"
-    if game.winner.present?
-      winner = User.find(game.winner)
-      winner == current_user ? status = status+" You won!" : status = status+" #{winner} won!"
-    else
-      status = status + " It's a draw!"
-    end
-    status
-  end
+
 
 end

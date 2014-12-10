@@ -15,13 +15,30 @@
 
       <tbody>
       <%@received_invitations.each do |invitation|%>
-        <tr>
-          <td><%= get_friend(invitation).username%></td>
-          <td><%=invitation.created_at%></td>
-          <td> <%= button_to 'Accept', controller: :partnerships, action: "accept", id: invitation.id, class: "uk-button uk-button-small" %>
-          <%= button_to 'Decline', controller: :partnerships, action: "decline", id: invitation.id, data: { confirm: "Are you sure you don't want to play?" }, class: "uk-button uk-button-small" %></td>
-                </tr>
-            <% end %>
+          <tr>
+            <td><%= get_friend(invitation).username%></td>
+            <td><%=invitation.created_at%></td>
+            <td>
+              <div class="uk-button-dropdown" data-uk-dropdown>
+                <button class="uk-button-small uk-button-primary">Reply</button>
+                <div class="uk-dropdown" style="width: 60px;">
+                  <ul class="uk-nav uk-nav-dropdown">
+                    <li>
+                      <%= form_tag({controller: "partnerships", action: "accept", id: invitation.id}, method: "post") do %>
+                          <a href="#" onclick="$(this).parent().submit()">Accept</a>
+                      <% end %>
+                    </li>
+                    <li>
+                      <%= form_tag({controller: "partnerships", action: "decline", id: invitation.id, data: { confirm: "Are you sure you don't want to play?" }}, method: "post") do %>
+                          <a href="#" onclick="$(this).parent().submit()">Decline</a>
+                      <% end %>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </td>
+          </tr>
+      <% end %>
       </tbody>
     </table>
 
@@ -30,24 +47,26 @@
 
 <% if not @declined_invitations.empty? %>
     <h1>Declined invitations</h1>
-                <table class = "uk-table uk-table-striped uk-table-hover">
-                  <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                  </tr>
-                  </thead>
+    <table class = "uk-table uk-table-striped uk-table-hover">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+      </tr>
+      </thead>
 
-                  <tbody>
-                  <%@declined_invitations.each do |invitation|%>
-                  <tr>
-                    <td><%= get_friend(invitation).username%></td>
-                    <td>declined your invitation! :(</td>
-                    <td> <%= button_to 'ok', partnership_path(id: invitation.id), method: "delete", class: "uk-button uk-button-small" %></td>
-                  </tr>
-                  <% end %>
-                  </tbody>
+      <tbody>
+      <%@declined_invitations.each do |invitation|%>
+          <tr>
+            <td><%= get_friend(invitation).username%></td>
+            <td>declined your invitation! :(</td>
+
+
+            <td> <%= button_to 'ok', partnership_path(id: invitation.id), method: "delete", class: "uk-button uk-button-small" %></td>
+          </tr>
+      <% end %>
+      </tbody>
 
 <% end %>
 

@@ -5,6 +5,7 @@
   <tr>
     <th>Start</th>
 	<th>Partner</th>
+    <th>Next Turn</th>
     <th>Actions</th>
   </tr>
   </thead>
@@ -14,6 +15,7 @@
       <tr>
         <td><%= g.start%></td>
         <td><%= partner(g).username%></td>
+        <td><%= (g.board_states.last.turn == "B" ? User.find(g.partnership.user1_id).username : User.find(g.partnership.user2_id).username) %></td>
         <td><%= link_to 'view', g %></td>
       </tr>
 	<% end %>

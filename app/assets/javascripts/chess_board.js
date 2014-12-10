@@ -285,9 +285,12 @@ function processMove(clickedBlock) {
                 //update the turn box
                 if (json['game_status'] !== undefined) {
                     $("#status_header").html(json['game_status']);
+                    $("#draw_request").remove();
+                } else {
+                    $("#op_name").html($("#opponent_name").text() + "'s");
+                    $("#draw_request").remove();
+                    $("#refreshLink").toggle();
                 }
-                $("#op_name").html($("#opponent_name").text()+"'s");
-                $("#draw_request").remove();
 
             },
             error: function(xhr,status,error) {
