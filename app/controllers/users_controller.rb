@@ -37,9 +37,9 @@ class UsersController < ApplicationController
     else
      # map them to the games
      game_ids = partnerships.map {|p| p.game_id}
-      @current_games = Game.where("id IN (#{game_ids.join(', ')}) AND end IS NULL")
+      #@current_games = Game.where("id IN (#{game_ids.join(', ')}) AND end IS NULL")
       # for postgres include end into quotation marks
-      #@current_games = Game.where("id IN (#{game_ids.join(', ')}) AND \"end\" IS NULL")
+      @current_games = Game.where("id IN (#{game_ids.join(', ')}) AND \"end\" IS NULL")
     end
   end
 
