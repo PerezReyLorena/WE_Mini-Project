@@ -20,16 +20,4 @@ module GamesHelper
     partnership.user1_id == current_user.id ? 'B' : 'W'
   end
 
-
-  def display_end_status(game)
-    status = "The game is over!"
-    if game.winner.present?
-      winner = User.find(game.winner)
-      winner == current_user ? status = status+" You won!" : status = status+" #{winner} won!"
-    else
-      status = status + " It's a draw!"
-    end
-    status
-  end
-
 end

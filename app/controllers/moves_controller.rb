@@ -56,6 +56,17 @@ class MovesController < ApplicationController
         # check if there are valid moves (+any other termination conditions) for the other player
         # if no valid moves: then you set the end of the game to Time.now and add the winner if needed
         # update the players score
+		finished = game_end?(board)
+		if finished == "DRAW"
+		  game.end = Time.now
+		elsif finished =~ /.+ WON/
+		  info = finished.split
+		  winner = info[0]
+		  partnership = Partnership.where(game_id: game.id).first
+		  winner = (winner == "BLACK" ? partnership.user1_id : partnership.user2_id)
+		  game.winner = winner
+		  game.end = Time.now
+		end
         if not game.end.nil?
           move_response["game_status"] = display_end_status(game)
         end
@@ -73,6 +84,30 @@ class MovesController < ApplicationController
 
   def move_params
     params.require(:move).permit(:user_id, :game_id, :valid, :from_to)
+  end
+  
+  def game_end?(board)
+	if board.can_move? == false
+	  if board.is_not_check?
+		return "DRAW"
+	  else
+	    player = (board.current_player == 'B' ? "WHITE" : "BLACK")
+		return player+" WON"
+	  end
+	else
+	  return "CONTINUE"
+	end
+  end
+  
+  def display_end_status(game)
+    status = "The game is over!"
+    if game.winner.present?
+      winner = User.find(game.winner)
+      winner == current_user ? status = status+" You won!" : status = status+" #{winner} won!"
+    else
+      status = status + " It's a draw!"
+    end
+    status
   end
 
 end
