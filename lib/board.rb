@@ -23,12 +23,12 @@ class Board
 
     # set the initial status of a chess game
     @state = params[:state] || [['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR'],
-                                ['WP', 'WP', 'WP', 'WP', 'EE', 'WP', 'WP', 'WP'],
-                                ['EE', 'EE', 'EE', 'EE', 'WP', 'EE', 'EE', 'EE'],
+                                ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
                                 ['EE', 'EE', 'EE', 'EE', 'EE', 'EE', 'EE', 'EE'],
-                                ['EE', 'EE', 'EE', 'EE', 'EE', 'EE', 'BP', 'EE'],
-                                ['EE', 'EE', 'EE', 'EE', 'EE', 'BP', 'EE', 'EE'],
-                                ['BP', 'BP', 'BP', 'BP', 'BP', 'EE', 'EE', 'BP'],
+                                ['EE', 'EE', 'EE', 'EE', 'EE', 'EE', 'EE', 'EE'],
+                                ['EE', 'EE', 'EE', 'EE', 'EE', 'EE', 'EE', 'EE'],
+                                ['EE', 'EE', 'EE', 'EE', 'EE', 'EE', 'EE', 'EE'],
+                                ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
                                 ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR']]
     # set current player to white ('W' = white, 'B' = black)
     @current_player = params[:current_player] || 'W'
