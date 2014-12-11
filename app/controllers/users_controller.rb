@@ -46,9 +46,8 @@ class UsersController < ApplicationController
 
   def games_with_friend
     @partner = User.find(Integer(params[:user_id]))
-    partnerships = Partnership.where('(user1_id = ? AND user2_id = ?) AND confirmed = ?', current_user.id, Integer(params[:user_id]), true)
-    partnerships << Partnership.where('(user1_id = ? AND user2_id = ?) AND confirmed = ?', Integer(params[:user_id]), current_user.id, true)
-    game_ids = partnerships.last.map {|p| p.game_id}
+    partnerships = Partnership.where('((user1_id = ? AND user2_id = ?) OR (user2_id = ? AND user1_id = ?)) AND confirmed = ?', current_user.id, Integer(params[:user_id]), current_user.id, Integer(params[:user_id]), true)
+    game_ids = partnerships.map {|p| p.game_id}
     @games_with_friend = Game.find(game_ids)
   end
 
