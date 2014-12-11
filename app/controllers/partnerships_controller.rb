@@ -15,7 +15,7 @@ class PartnershipsController < ApplicationController
   def create
     @partnership = Partnership.new
     @partnership.user1_id = current_user.id
-    @partnership.user2_id = params[:user2_id]
+    @partnership.user2_id = Integer(params[:user2_id])
     friend_name = User.find(@partnership.user2_id).username
     respond_to do |format|
       if @partnership.save
@@ -29,7 +29,7 @@ class PartnershipsController < ApplicationController
   end
 
   def accept
-    @partnership = Partnership.find_by id: params[:id]
+    @partnership = Partnership.find_by id: Integer(params[:id])
     @partnership.confirmed = true
     game = @partnership.create_game(start: Time.now)
     new_board = Board.new
@@ -47,7 +47,7 @@ class PartnershipsController < ApplicationController
   end
 
   def decline
-    @partnership = Partnership.find_by id: params[:id]
+    @partnership = Partnership.find_by id: Integer(params[:id])
     @partnership.confirmed = false
     respond_to do |format|
       if @partnership.save
@@ -74,7 +74,7 @@ class PartnershipsController < ApplicationController
 
   private
     def set_partnership
-      @partnership = Partnership.find(params[:id])
+      @partnership = Partnership.find(Integer(params[:id]))
     end
 
     def partnership_params

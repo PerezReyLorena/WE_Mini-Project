@@ -7,12 +7,12 @@ class MovesController < ApplicationController
   end
 
   def index
-    @moves = Move.where(game_id: params[:game_id])
-    @game = Game.find(params[:game_id])
+    @moves = Move.where(game_id: Integer(params[:game_id]))
+    @game = Game.find(Integer(params[:game_id]))
   end
 
   def create
-    @move = Move.create(game_id: params[:game_id], user_id: params[:user_id])
+    @move = Move.create(game_id: Integer(params[:game_id]), user_id: Integer(params[:user_id]))
     @move.from_to = params[:from_to]
     if @move.save
       redirect_to :action => :validate, id: @move.id
@@ -20,9 +20,9 @@ class MovesController < ApplicationController
   end
 
   def show
-    @move = Move.find(params[:id])
+    @move = Move.find(Integer(params[:id]))
     @game = @move.game
-    @state = BoardState.find_by_move_id(params[:id]).json_state()
+    @state = BoardState.find_by_move_id(Integer(params[:id])).json_state()
   end
 
   def update
@@ -96,7 +96,7 @@ class MovesController < ApplicationController
 
   private
   def set_move
-    @move = Move.find(params[:id])
+    @move = Move.find(Integer(params[:id]))
   end
 
   def move_params

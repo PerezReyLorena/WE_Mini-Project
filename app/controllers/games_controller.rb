@@ -10,7 +10,7 @@ class GamesController < ApplicationController
   end
 
   def show
-    @game = Game.find(params[:id])
+    @game = Game.find(Integer(params[:id]))
     # select the latest board state
     board_state =  BoardState.where(game_id: @game.id).order("created_at").last
     @state = board_state.json_state()
@@ -41,7 +41,7 @@ class GamesController < ApplicationController
 
   private
     def set_game
-      @game = Game.find(params[:id])
+      @game = Game.find(Integer(params[:id]))
     end
 
     def game_params
