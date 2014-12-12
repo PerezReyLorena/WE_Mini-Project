@@ -23,8 +23,25 @@
             <% if not @received_draw_request.nil? %> <!-- There's a draw request addressed to the current user -->
                 <div class="uk-panel">
                   <h3 class="uk-text-large"><%= partner(@game).username %> proposes a draw!</h3>
-                  <%= button_to 'Accept', controller: :draw_requests, action: "accept", id: @received_draw_request.id, class: "uk-button uk-button-primary uk-button-small" %>
-                  <%= button_to 'Decline', controller: :draw_requests, action: "decline", id: @received_draw_request.id, data: { confirm: "Are you sure you want to draw this game?" }, class: "uk-button uk-button-primary uk-button-small" %>
+
+                  <div class="uk-button-dropdown" data-uk-dropdown>
+                    <button class="uk-button-small uk-button-primary">Reply</button>
+                    <div class="uk-dropdown" style="width: 60px;">
+                      <ul class="uk-nav uk-nav-dropdown">
+                        <li>
+                          <%= form_tag({controller: "draw_requests", action: "accept", id: @received_draw_request.id}, method: "post") do %>
+                              <a href="#" onclick="$(this).parent().submit()">Accept</a>
+                          <% end %>
+                        </li>
+                        <li>
+                          <%= form_tag({controller: "draw_requests", action: "decline", id: @received_draw_request.id, data: { confirm: "Are you sure you want to draw this game?" }}, method: "post") do %>
+                              <a href="#" onclick="$(this).parent().submit()">Decline</a>
+                          <% end %>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
                 </div>
             <% elsif current_user_turn?(@game, @turn)%> <!-- There's no draw request and it's current user's turn -->
                 <div class="uk-panel">

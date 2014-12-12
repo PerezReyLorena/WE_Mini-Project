@@ -5,6 +5,7 @@
       <driver-ref>sqlite.xerial</driver-ref>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/db/development.sqlite3</jdbc-url>
+      <table-pattern>users</table-pattern>
       <libraries />
     </data-source>
     <data-source source="LOCAL" name="Rails ChessGame: test" uuid="df2e86a4-7f2b-49ad-a5e9-b934c28d0393">

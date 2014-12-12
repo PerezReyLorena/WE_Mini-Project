@@ -9,7 +9,6 @@
         <th>From</th>
         <th>Date</th>
         <th>Actions</th>
-        <th>&nbsp;</th>
       </tr>
       </thead>
 
@@ -63,12 +62,10 @@
             <td>declined your invitation! :(</td>
 
 
-            <td> <%= button_to 'ok', partnership_path(id: invitation.id), method: "delete", class: "uk-button uk-button-small" %></td>
+            <td> <%= button_to 'ok', partnership_path(id: invitation.id), method: "delete", class: "uk-button uk-button-small uk-button-primary" %></td>
           </tr>
       <% end %>
       </tbody>
+    </table>
 
 <% end %>
-
-
-<%= link_to 'Back', welcome_home_path %>
