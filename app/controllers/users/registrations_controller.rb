@@ -10,5 +10,4 @@ class Users::RegistrationsController < Devise::RegistrationsController
   private :sign_up_params
   private :account_update_params
 
-
 end
